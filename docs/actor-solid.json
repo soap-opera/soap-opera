@@ -1,0 +1,26 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://w3id.org/security/v1"
+  ],
+  "id": "https://<pod-origin-storage>/<ap-path>/profile/actor",
+  "type": "Person",
+  "preferredUsername": "<username>",
+  "name": "<name>",
+  "summary": "<summary>",
+  "inbox": "https://<pod-origin-storage>/<ap-path>/inbox/",
+  "outbox": "https://<pod-origin-storage>/<ap-path>/outbox",
+  "followers": "https://<pod-origin-storage>/<ap-path>/followers",
+  "following": "https://<pod-origin-storage>/<ap-path>/following",
+  "published": "2025-01-01T00:00:00Z",
+  "icon": {
+    "type": "Image",
+    "mediaType": "image/jpeg",
+    "url": "<avatar-url>"
+  },
+  "publicKey": {
+    "id": "https://<pod-origin-storage>/<ap-path>/profile/actor#main-key",
+    "owner": "https://<pod-origin-storage>/<ap-path>/profile/actor",
+    "publicKeyPem": "-----BEGIN PUBLIC KEY-----\n[...]\n-----END PUBLIC KEY-----"
+  }
+}

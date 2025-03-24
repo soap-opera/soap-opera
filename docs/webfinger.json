@@ -1,0 +1,10 @@
+{
+  "subject": "acct:<username>@<pod-origin-storage>",
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/activity+json",
+      "href": "https://<pod-origin-storage>/<ap-path>/profile/actor"
+    }
+  ]
+}
