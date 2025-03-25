@@ -16,7 +16,6 @@ export const createApp = async (config: AppConfig) => {
   const router = new Router()
 
   router.post('/users/:username/inbox', (async ctx => {
-    console.log(ctx.params.username)
     ctx.status = 200
   }) as Middleware<null, { params: { username: string } }>)
 

@@ -14,9 +14,9 @@ dotenv.config({ path: '.env.local' })
 
 const { prompt } = enquirer
 
-const provider = process.env.CSS_IDENTITY_PROVIDER!
-const email = process.env.CSS_IDENTITY_EMAIL!
-const password = process.env.CSS_IDENTITY_PASSWORD!
+const provider = process.env.CSS_IDENTITY_PROVIDER ?? ''
+const email = process.env.CSS_IDENTITY_EMAIL ?? ''
+const password = process.env.CSS_IDENTITY_PASSWORD ?? ''
 
 ;(async () => {
   // if (!providerEnv)
@@ -77,7 +77,7 @@ const password = process.env.CSS_IDENTITY_PASSWORD!
 
   // let addHeader = true
 
-  const headers: { [key: string]: string } = {}
+  const headers: Record<string, string> = {}
 
   if (contentType) headers['content-type'] = contentType
   if (accept) headers['accept'] = accept
@@ -96,7 +96,9 @@ const password = process.env.CSS_IDENTITY_PASSWORD!
     body: method === 'GET' ? undefined : body,
   })
 
+  // eslint-disable-next-line no-console
   console.log(response)
 
+  // eslint-disable-next-line no-console
   console.log(await response.text())
 })()
