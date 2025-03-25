@@ -1,0 +1,32 @@
+name: Lint
+
+on: push
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install NPM packages
+        run: yarn install --frozen-lockfile
+
+      - name: Check code style
+        run: yarn lint --max-warnings 0
+
+      - name: Check formatting
+        run: yarn prettier . --check
+
+      - name: Check clutter
+        run: yarn knip
+
+      - name: Check that TypeScript compiles
+        run: yarn tsc

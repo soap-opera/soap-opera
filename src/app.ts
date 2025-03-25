@@ -1,3 +1,4 @@
+import { bodyParser } from '@koa/bodyparser'
 import cors from '@koa/cors'
 import Router from '@koa/router'
 import Koa, { Middleware } from 'koa'
@@ -22,6 +23,7 @@ export const createApp = async (config: AppConfig) => {
   app
     .use(koaHelmet.default())
     .use(cors())
+    .use(bodyParser())
     .use(router.routes())
     .use(router.allowedMethods())
 
