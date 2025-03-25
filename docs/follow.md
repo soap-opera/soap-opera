@@ -2,7 +2,7 @@
 
 ## Get followed
 
-In order to be followed, we need to be able to receive a Follow activity into the inbox, verify it, and add the actor into the followers.
+In order to be followed, we need to be able to receive a Follow activity into the inbox, verify it, and add the actor into the followers. For this reason we need to start developing activity.
 
 ## Follow
 
