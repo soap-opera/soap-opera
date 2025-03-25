@@ -7,15 +7,21 @@ import * as css from '@solid/community-server'
 import { IncomingMessage, Server, ServerResponse } from 'http'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { AppConfig, createApp } from '../app.js'
 import { createRandomAccount, getRandomPort } from './helpers/index.js'
 import type { Person } from './helpers/types.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+const appConfig: AppConfig = {
+  isBehindProxy: false,
+  port: -1,
+  baseUrl: '',
+}
+
 let server: Server<typeof IncomingMessage, typeof ServerResponse>
 let person: Person
 let person2: Person
-let person3: Person
 let cssServer: css.App
 const testConfig = {
   cssPort: -1,
@@ -25,6 +31,15 @@ const testConfig = {
 beforeAll(() => {
   testConfig.cssPort = getRandomPort()
   testConfig.cssUrl = `http://localhost:${testConfig.cssPort}`
+
+  testConfig.cssPort = getRandomPort()
+  testConfig.cssUrl = `http://localhost:${testConfig.cssPort}`
+
+  // appConfig.indexedGroups = [testConfig.cssUrl + '/group/group#us']
+  // appConfig.allowedGroups = appConfig.indexedGroups
+  appConfig.port = getRandomPort()
+  appConfig.baseUrl = `http://localhost:${appConfig.port}`
+  // appConfig.webId = new URL('/profile/card#bot', appConfig.baseUrl).toString()
 })
 
 beforeAll(async () => {
@@ -65,13 +80,26 @@ afterAll(async () => {
   await cssServer.stop()
 })
 
+beforeAll(async () => {
+  const app = await createApp(appConfig)
+
+  server = await new Promise(resolve => {
+    const srv = app.listen(appConfig.port, () => {
+      resolve(srv)
+    })
+  })
+})
+
+afterAll(async () => {
+  await new Promise(resolve => server.close(resolve))
+})
+
 /**
  * Before each test, create a new account and authenticate to it
  */
 beforeEach(async () => {
   person = await createRandomAccount({ solidServer: testConfig.cssUrl })
   person2 = await createRandomAccount({ solidServer: testConfig.cssUrl })
-  person3 = await createRandomAccount({ solidServer: testConfig.cssUrl })
 }, 20000)
 
-export { person, person2, testConfig }
+export { appConfig, person, person2, testConfig }

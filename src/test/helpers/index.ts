@@ -90,11 +90,6 @@ export const getDefaultPerson = async (
   }
 }
 
-const getRandomLocation = (): [number, number] => [
-  (Math.random() - 0.5) * 180,
-  (Math.random() - 0.5) * 360,
-]
-
 export function getRandomPort(): number {
   // Generate a random number between 1024 and 65535
   const min = 1024
