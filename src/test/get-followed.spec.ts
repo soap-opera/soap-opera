@@ -81,7 +81,59 @@ describe('Accept Follow activity from somebody', () => {
     expect(response.status).toBe(401)
   })
 
-  it.todo('should reject invalid activity')
-  it.todo('should save Follow activity to Solid Pod')
+  it('[non-matching actor] should reject spoofed activity', async () => {
+    const request = new Request(
+      new URL(`/users/testuser/inbox`, appConfig.baseUrl),
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/activity+json' },
+        body: JSON.stringify({
+          ...validBody,
+          actor: 'https://other.local/actor',
+        }),
+      },
+    )
+
+    const signedRequest = await signRequest(
+      request,
+      keys.privateKey,
+      new URL('https://example.local/actor#main-key'),
+    )
+
+    const response = await fetch(signedRequest)
+
+    expect(response.status).toBe(401)
+  })
+
+  it('[invalid activity] should reject invalid activity', async () => {
+    const request = new Request(
+      new URL(`/users/testuser/inbox`, appConfig.baseUrl),
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/activity+json' },
+        body: JSON.stringify({
+          ...validBody,
+          type: 'Whatever',
+        }),
+      },
+    )
+
+    const signedRequest = await signRequest(
+      request,
+      keys.privateKey,
+      new URL('https://example.local/actor#main-key'),
+    )
+
+    const response = await fetch(signedRequest)
+
+    expect(response.status).toBe(400)
+  })
+
+  it.todo('should save Follow activity to Solid Pod', async () => {
+    expect(true).toBe(false)
+  })
+})
+
+describe('Read a list of followers', () => {
   it.todo('should read a list of followers')
 })

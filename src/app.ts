@@ -4,6 +4,8 @@ import Router from '@koa/router'
 import Koa from 'koa'
 import koaHelmet from 'koa-helmet'
 import { verifyHttpSignature } from './middlewares/auth.js'
+import { processActivity } from './middlewares/inbox.js'
+import { validateActivity } from './middlewares/validate.js'
 import { configureLog } from './utils/log.js'
 
 export interface AppConfig {
@@ -20,9 +22,12 @@ export const createApp = async (config: AppConfig) => {
   app.proxy = config.isBehindProxy
   const router = new Router()
 
-  router.post('/users/:username/inbox', verifyHttpSignature, async ctx => {
-    ctx.status = 200
-  })
+  router.post(
+    '/users/:username/inbox',
+    verifyHttpSignature,
+    validateActivity,
+    processActivity,
+  )
 
   app
     .use(koaHelmet.default())

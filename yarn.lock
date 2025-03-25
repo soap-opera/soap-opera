@@ -2250,7 +2250,7 @@
   resolved "https://registry.npmjs.org/@fastify/busboy/-/busboy-2.1.1.tgz#b9da6a878a371829a0502c9b6c1c143ef6663f4d"
   integrity sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==
 
-"@fedify/fedify@^1.4.7":
+"@fedify/fedify@1.4.7":
   version "1.4.7"
   resolved "https://registry.npmjs.org/@fedify/fedify/-/fedify-1.4.7.tgz#7cdd0e52a991bd80d4169e329997bd3c9f5ce16e"
   integrity sha512-G0d5LgPIwTb/xGCl2a4zFR30vNvVEPnNcvbpAoIaTt3xFv4XQttBcvYsmaI9JKzl36CXlq3qaQzhwchk5t2qew==
@@ -4838,9 +4838,9 @@ keyv@^4.5.3, keyv@^4.5.4:
     json-buffer "3.0.1"
 
 knip@^5.46.0:
-  version "5.46.0"
-  resolved "https://registry.npmjs.org/knip/-/knip-5.46.0.tgz#8444881f9382901b4022775ba99e2df4de1df991"
-  integrity sha512-WedHSK5xNBWYgm64Rt5B9b0CVXL2kRBcyCeet3NHgdv9en3QE4AWSDPEiX48NoPUBW3h//9S0VwLF5MG/MPi3g==
+  version "5.46.1"
+  resolved "https://registry.npmjs.org/knip/-/knip-5.46.1.tgz#d95f7886cac7e5ea16a52843eef2754510d10b1c"
+  integrity sha512-SJOz6h5Twmu0/X5mf+OkFkx4D32seqPvklchSrl61Bl+4hYeZIrcWbhbCdvDamH/6pLy/qUBV8TUp+7libjdCg==
   dependencies:
     "@nodelib/fs.walk" "3.0.1"
     "@snyk/github-codeowners" "1.1.0"
@@ -6662,7 +6662,7 @@ zod-validation-error@^3.0.3:
   resolved "https://registry.npmjs.org/zod-validation-error/-/zod-validation-error-3.4.0.tgz#3a8a1f55c65579822d7faa190b51336c61bee2a6"
   integrity sha512-ZOPR9SVY6Pb2qqO5XHt+MkkTRxGXb4EVtnjc9JpXUOtUB1T9Ru7mZOT361AN3MsetVe7R0a1KZshJDZdgp9miQ==
 
-zod@^3.22.4:
+zod@^3.22.4, zod@^3.24.2:
   version "3.24.2"
   resolved "https://registry.npmjs.org/zod/-/zod-3.24.2.tgz#8efa74126287c675e92f46871cfc8d15c34372b3"
   integrity sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==

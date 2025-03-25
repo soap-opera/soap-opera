@@ -1,7 +1,14 @@
 import { verifyRequest } from '@fedify/fedify'
 import { Middleware } from 'koa'
 
-export const verifyHttpSignature: Middleware = async (ctx, next) => {
+export interface User {
+  id: string
+}
+
+export const verifyHttpSignature: Middleware<{ user?: User }> = async (
+  ctx,
+  next,
+) => {
   const normalizedHeaders: Record<string, string> = Object.entries(
     ctx.request.headers,
   ).reduce(
@@ -26,12 +33,13 @@ export const verifyHttpSignature: Middleware = async (ctx, next) => {
     }),
   )
 
-  if (!result) {
-    ctx.throw(401)
-    return
-  }
+  if (!result) return ctx.throw(401)
+  if (!result.ownerId) return ctx.throw(401)
 
-  // console.log(result, '*******')
+  if (ctx.request.body?.actor !== result.ownerId.toString())
+    return ctx.throw(401)
+
+  ctx.state.user = { id: result.ownerId.toString() }
 
   await next()
 }
