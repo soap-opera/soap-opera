@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { person } from './setup.js'
 
-const contentTypes = ['application/activity+json', 'something/random+whatever']
+const contentTypes = [
+  'application/activity+json',
+  'something/random+whatever',
+  // TODO debug this and open issue in CSS
+  // 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
+]
 
 describe('content-type on CSS', () => {
   contentTypes.forEach(contentType => {

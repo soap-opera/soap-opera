@@ -1,7 +1,7 @@
-// import { parseLinkHeader } from '@solid/community-server'
+import { parseLinkHeader } from '@solid/community-server'
 import { v7 } from 'css-authn'
 import { randomUUID } from 'node:crypto'
-// import { expect } from 'vitest'
+import { expect } from 'vitest'
 
 export const createRandomAccount = async ({
   solidServer,
@@ -27,20 +27,20 @@ export const createRandomAccount = async ({
 // /**
 //  * Find link to ACL document for a given URI
 //  */
-// export const getAcl = async (
-//   uri: string,
-//   ffetch: typeof globalThis.fetch = globalThis.fetch,
-// ) => {
-//   const response = await ffetch(uri, { method: 'HEAD' })
-//   expect(response.ok).toBe(true)
-//   const linkHeader = response.headers.get('link')
-//   const links = parseLinkHeader(linkHeader ?? '')
-//   const aclLink = links.find(link => link.parameters.rel === 'acl')
-//   const aclUri = aclLink?.target
-//   if (!aclUri) throw new Error(`We could not find WAC link for ${uri}`)
-//   // if aclUri is relative, return absolute uri
-//   return new URL(aclUri, uri).toString()
-// }
+export const getAcl = async (
+  uri: string,
+  ffetch: typeof globalThis.fetch = globalThis.fetch,
+) => {
+  const response = await ffetch(uri, { method: 'HEAD' })
+  expect(response.ok).toBe(true)
+  const linkHeader = response.headers.get('link')
+  const links = parseLinkHeader(linkHeader ?? '')
+  const aclLink = links.find(link => link.parameters.rel === 'acl')
+  const aclUri = aclLink?.target
+  if (!aclUri) throw new Error(`We could not find WAC link for ${uri}`)
+  // if aclUri is relative, return absolute uri
+  return new URL(aclUri, uri).toString()
+}
 
 // export const getDefaultPerson = async (
 //   {

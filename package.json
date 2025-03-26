@@ -14,7 +14,7 @@
   "devDependencies": {
     "@eslint/js": "^9.23.0",
     "@solid/community-server": "^7.1.6",
-    "css-authn": "^0.1.0",
+    "css-authn": "^0.1.1",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
     "globals": "^16.0.0",
@@ -25,11 +25,12 @@
     "vitest": "^3.0.9"
   },
   "dependencies": {
-    "@fedify/fedify": "1.4.7",
+    "@fedify/fedify": "^1.4.9",
     "@koa/bodyparser": "^5.1.1",
     "@koa/cors": "^5.0.0",
     "@koa/router": "^13.1.0",
     "@logtape/logtape": "^0.9.0",
+    "@soid/koa": "^0.1.2",
     "@types/koa": "^2.15.0",
     "@types/koa__cors": "^5.0.0",
     "@types/koa__router": "^12.0.4",
@@ -38,6 +39,7 @@
     "helmet": "^8.1.0",
     "koa": "^2.16.0",
     "koa-helmet": "^8.0.1",
+    "n3": "^1.24.2",
     "typescript": "^5.8.2",
     "zod": "^3.24.2"
   },

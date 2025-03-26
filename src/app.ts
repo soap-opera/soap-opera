@@ -1,10 +1,12 @@
 import { bodyParser } from '@koa/bodyparser'
 import cors from '@koa/cors'
 import Router from '@koa/router'
+import { solidIdentity } from '@soid/koa'
 import Koa from 'koa'
 import koaHelmet from 'koa-helmet'
 import { verifyHttpSignature } from './middlewares/auth.js'
 import { processActivity } from './middlewares/inbox.js'
+import { loadConfig } from './middlewares/loadConfig.js'
 import { validateActivity } from './middlewares/validate.js'
 import { configureLog } from './utils/log.js'
 
@@ -22,12 +24,14 @@ export const createApp = async (config: AppConfig) => {
   app.proxy = config.isBehindProxy
   const router = new Router()
 
-  router.post(
-    '/users/:username/inbox',
-    verifyHttpSignature,
-    validateActivity,
-    processActivity,
-  )
+  router
+    .use(solidIdentity('https://example.com', config.baseUrl).routes())
+    .post(
+      '/users/:username/inbox',
+      verifyHttpSignature,
+      validateActivity,
+      processActivity,
+    )
 
   app
     .use(koaHelmet.default())
@@ -46,6 +50,7 @@ export const createApp = async (config: AppConfig) => {
         encoding: 'utf-8',
       }),
     )
+    .use(loadConfig(config))
     .use(router.routes())
     .use(router.allowedMethods())
 

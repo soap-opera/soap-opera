@@ -33,11 +33,16 @@ export const verifyHttpSignature: Middleware<{ user?: User }> = async (
     }),
   )
 
-  if (!result) return ctx.throw(401)
-  if (!result.ownerId) return ctx.throw(401)
+  if (!result) return ctx.throw(401, 'HTTP Signature is not valid.')
+  if (!result.ownerId) return ctx.throw(401, 'No signer.')
 
-  if (ctx.request.body?.actor !== result.ownerId.toString())
-    return ctx.throw(401)
+  const signer = result.ownerId.toString()
+
+  if (ctx.request.body?.actor !== signer)
+    return ctx.throw(
+      401,
+      `Actor must match Signer.\nActor: ${ctx.request.body.actor}\nSigner: ${signer}`,
+    )
 
   ctx.state.user = { id: result.ownerId.toString() }
 

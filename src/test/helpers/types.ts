@@ -6,4 +6,9 @@ export interface Person {
   password: string
   email: string
   fetch: typeof globalThis.fetch
+  actor?: {
+    id: string
+    'soap:following': string
+    'soap:followers': string
+  }
 }

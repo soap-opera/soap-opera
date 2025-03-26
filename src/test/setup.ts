@@ -32,9 +32,6 @@ beforeAll(() => {
   testConfig.cssPort = getRandomPort()
   testConfig.cssUrl = `http://localhost:${testConfig.cssPort}`
 
-  testConfig.cssPort = getRandomPort()
-  testConfig.cssUrl = `http://localhost:${testConfig.cssPort}`
-
   // appConfig.indexedGroups = [testConfig.cssUrl + '/group/group#us']
   // appConfig.allowedGroups = appConfig.indexedGroups
   appConfig.port = getRandomPort()
@@ -61,6 +58,7 @@ beforeAll(async () => {
     shorthand: {
       port: testConfig.cssPort,
       loggingLevel: 'off',
+      baseUrl: testConfig.cssUrl,
       // seedConfig: css.joinFilePath(__dirname, './css-pod-seed.json'), // set up some Solid accounts
     },
   })

@@ -1,9 +1,12 @@
 import { generateCryptoKeyPair, signRequest } from '@fedify/fedify'
 import { HttpResponse, RequestHandler, http } from 'msw'
 import { setupServer } from 'msw/node'
+import assert from 'node:assert'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { soapPrefix } from '../config/constants.js'
 import { cryptoKeyToPem } from '../utils/crypto.js'
-import { appConfig } from './setup.js'
+import { removeActorLink, setupActor } from './helpers/pod.js'
+import { appConfig, person } from './setup.js'
 
 const validBody = {
   '@context': 'https://www.w3.org/ns/activitystreams',
@@ -35,6 +38,22 @@ const handlers: RequestHandler[] = [
       },
     })
   }),
+  http.get('https://example.localhost/profile/actor', () => {
+    return HttpResponse.json({
+      id: 'https://example.localhost/profile/actor',
+      'soap:isActorOf': 'https://solidpod.local/profile/card#me',
+      'soap:followers': 'https://solidpod.local/activitypub/followers',
+    })
+  }),
+  http.get('https://solidpod.local/profile/card', () => {
+    return HttpResponse.text(
+      `<#me> <${soapPrefix}hasActor> <https://example.localhost/profile/actor>.`,
+      { headers: { 'content-type': 'text/turtle' } },
+    )
+  }),
+  http.patch('https://solidpod.local/activitypub/followers', () => {
+    return HttpResponse.json({})
+  }),
 ]
 
 const server = setupServer(...handlers)
@@ -46,11 +65,17 @@ describe('Accept Follow activity from somebody', () => {
 
   it('should receive Follow activity to inbox', async () => {
     const request = new Request(
-      new URL(`/users/testuser/inbox`, appConfig.baseUrl),
+      new URL(
+        `/users/${encodeURIComponent('https://example.localhost/profile/actor')}/inbox`,
+        appConfig.baseUrl,
+      ),
       {
         method: 'POST',
         headers: { 'content-type': 'application/activity+json' },
-        body: JSON.stringify(validBody),
+        body: JSON.stringify({
+          ...validBody,
+          object: 'https://example.localhost/profile/actor',
+        }),
       },
     )
 
@@ -79,6 +104,7 @@ describe('Accept Follow activity from somebody', () => {
       },
     )
     expect(response.status).toBe(401)
+    expect(await response.text()).toEqual('HTTP Signature is not valid.')
   })
 
   it('[non-matching actor] should reject spoofed activity', async () => {
@@ -103,6 +129,9 @@ describe('Accept Follow activity from somebody', () => {
     const response = await fetch(signedRequest)
 
     expect(response.status).toBe(401)
+    expect(await response.text()).toContain(
+      `Actor must match Signer.\nActor: https://other.local/actor\nSigner: https://example.local/actor`,
+    )
   })
 
   it('[invalid activity] should reject invalid activity', async () => {
@@ -127,10 +156,70 @@ describe('Accept Follow activity from somebody', () => {
     const response = await fetch(signedRequest)
 
     expect(response.status).toBe(400)
+    expect(await response.text()).toContain('Invalid activity:')
   })
 
-  it.todo('should save Follow activity to Solid Pod', async () => {
-    expect(true).toBe(false)
+  it.todo("when object does not match the target actor's inbox, fail")
+  it('make sure that webId and actor link to each other', async () => {
+    await setupActor(person, appConfig.baseUrl)
+    assert.ok(person.actor)
+    await removeActorLink(person.actor.id, person)
+
+    const actor = person.actor.id
+
+    // send the activity to a solid pod
+    const request = new Request(
+      new URL(`/users/${encodeURIComponent(actor)}/inbox`, appConfig.baseUrl),
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/activity+json' },
+        body: JSON.stringify({ ...validBody, object: actor }),
+      },
+    )
+
+    const signedRequest = await signRequest(
+      request,
+      keys.privateKey,
+      new URL('https://example.local/actor#main-key'),
+    )
+
+    const response = await fetch(signedRequest)
+
+    expect(response.status).toBe(400)
+    expect(await response.text()).toContain("WebId doesn't link to the actor.")
+  })
+
+  it('should save Follow activity to Solid Pod', async () => {
+    await setupActor(person, appConfig.baseUrl)
+    assert.ok(person.actor)
+
+    const actor = person.actor.id
+
+    const podFollowers = person.actor['soap:followers']
+
+    // send the activity to a solid pod
+    const request = new Request(
+      new URL(`/users/${encodeURIComponent(actor)}/inbox`, appConfig.baseUrl),
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/activity+json' },
+        body: JSON.stringify({ ...validBody, object: actor }),
+      },
+    )
+
+    const signedRequest = await signRequest(
+      request,
+      keys.privateKey,
+      new URL('https://example.local/actor#main-key'),
+    )
+
+    const response = await fetch(signedRequest)
+
+    expect(response.status).toBe(200)
+
+    const podFollowersResponse = await person.fetch(podFollowers)
+
+    expect(podFollowersResponse.ok).toBe(true)
   })
 })
 

@@ -8,7 +8,7 @@ const baseActivitySchema = z.object({
   actor: z.string().url(),
 })
 
-const followActivitySchema = baseActivitySchema.extend({
+export const followActivitySchema = baseActivitySchema.extend({
   type: z.literal('Follow'),
   object: z.string().url(),
 })
@@ -26,7 +26,7 @@ export const validateActivity: Middleware<{
     ctx.state.activity = activity
     await next()
   } catch (e) {
-    if (e instanceof ZodError) ctx.throw(400)
+    if (e instanceof ZodError) ctx.throw(400, `Invalid activity: ${e.message}`)
     else throw e
   }
 }
