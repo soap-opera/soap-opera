@@ -6,6 +6,11 @@ A layer of ActivityPub on top of a Solid Pod
 
 [Read what we try](./docs/)
 
+## Related efforts and communication channels
+
+- https://github.com/solid/activitypub-interop (official)
+- https://matrix.to/#/#ap:gitter.im (related matrix chat)
+
 ## Licensing
 
 - **Code:** This repository's code is licensed under the [MIT License](./LICENSE).
