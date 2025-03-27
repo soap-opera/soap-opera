@@ -8,6 +8,7 @@ import { verifyHttpSignature } from './middlewares/auth.js'
 import { readFollowers } from './middlewares/followers.js'
 import { processActivity } from './middlewares/inbox.js'
 import { loadConfig } from './middlewares/loadConfig.js'
+import { setupDocs } from './middlewares/setupDocs.js'
 import { validateActivity } from './middlewares/validateActivity.js'
 import { validateOwner } from './middlewares/validateOwner.js'
 import { configureLog } from './utils/log.js'
@@ -36,6 +37,7 @@ export const createApp = async (config: AppConfig) => {
       processActivity,
     )
     .get('/users/:actor/followers', validateOwner, readFollowers)
+    .get('/', setupDocs)
 
   app
     .use(koaHelmet.default())

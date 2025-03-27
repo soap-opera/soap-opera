@@ -10,7 +10,7 @@ import enquirer from 'enquirer'
  * CSS_IDENTITY_PASSWORD
  */
 
-dotenv.config({ path: '.env.local' })
+dotenv.config({ path: '.env' })
 
 const { prompt } = enquirer
 
