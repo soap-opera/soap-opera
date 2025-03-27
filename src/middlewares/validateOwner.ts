@@ -15,6 +15,10 @@ const actorSchema = z.object({
 })
 
 export type Actor = z.infer<typeof actorSchema>
+export interface OwnerState {
+  webId: string
+  actor: Actor
+}
 
 export const validateOwner: Middleware<
   { owner: { webId: string; actor: Actor }; config: AppConfig }, // to be filled

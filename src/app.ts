@@ -5,6 +5,7 @@ import { solidIdentity } from '@soid/koa'
 import Koa from 'koa'
 import koaHelmet from 'koa-helmet'
 import { verifyHttpSignature } from './middlewares/auth.js'
+import { readFollowers } from './middlewares/followers.js'
 import { processActivity } from './middlewares/inbox.js'
 import { loadConfig } from './middlewares/loadConfig.js'
 import { validateActivity } from './middlewares/validateActivity.js'
@@ -34,7 +35,7 @@ export const createApp = async (config: AppConfig) => {
       validateOwner,
       processActivity,
     )
-    .get('/users/:actor/followers')
+    .get('/users/:actor/followers', validateOwner, readFollowers)
 
   app
     .use(koaHelmet.default())
