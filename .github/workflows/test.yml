@@ -1,9 +1,10 @@
-name: Run integration tests
+name: Run Integration Tests
 
 on: push
 
 jobs:
   test:
+    name: 'Test'
     runs-on: ubuntu-latest
 
     steps:
