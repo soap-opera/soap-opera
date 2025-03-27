@@ -7,7 +7,8 @@ import koaHelmet from 'koa-helmet'
 import { verifyHttpSignature } from './middlewares/auth.js'
 import { processActivity } from './middlewares/inbox.js'
 import { loadConfig } from './middlewares/loadConfig.js'
-import { validateActivity } from './middlewares/validate.js'
+import { validateActivity } from './middlewares/validateActivity.js'
+import { validateOwner } from './middlewares/validateOwner.js'
 import { configureLog } from './utils/log.js'
 
 export interface AppConfig {
@@ -27,11 +28,13 @@ export const createApp = async (config: AppConfig) => {
   router
     .use(solidIdentity('https://example.com', config.baseUrl).routes())
     .post(
-      '/users/:username/inbox',
+      '/users/:actor/inbox',
       verifyHttpSignature,
       validateActivity,
+      validateOwner,
       processActivity,
     )
+    .get('/users/:actor/followers')
 
   app
     .use(koaHelmet.default())

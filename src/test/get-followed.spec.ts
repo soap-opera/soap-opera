@@ -1,7 +1,7 @@
 import { generateCryptoKeyPair, signRequest } from '@fedify/fedify'
 import { HttpResponse, RequestHandler, http } from 'msw'
 import { setupServer } from 'msw/node'
-import assert from 'node:assert'
+import assert from 'node:assert/strict'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { soapPrefix } from '../config/constants.js'
 import { cryptoKeyToPem } from '../utils/crypto.js'
@@ -17,6 +17,10 @@ const validBody = {
 }
 
 const keys = await generateCryptoKeyPair()
+
+const ownerWebId = 'https://solidpod.local/profile/card#me'
+const podFollowers = new URL('/activitypub/followers', ownerWebId).toString()
+const ownerActor = 'https://example.localhost/profile/actor'
 
 const handlers: RequestHandler[] = [
   http.get('https://example.local/actor', async () => {
@@ -38,20 +42,26 @@ const handlers: RequestHandler[] = [
       },
     })
   }),
-  http.get('https://example.localhost/profile/actor', () => {
+  http.get(ownerActor, () => {
+    const baseUrl = new URL(
+      `users/${encodeURIComponent(ownerActor)}/`,
+      appConfig.baseUrl,
+    )
     return HttpResponse.json({
-      id: 'https://example.localhost/profile/actor',
-      'soap:isActorOf': 'https://solidpod.local/profile/card#me',
-      'soap:followers': 'https://solidpod.local/activitypub/followers',
+      id: ownerActor,
+      'soap:isActorOf': ownerWebId,
+      'soap:followers': podFollowers,
+      inbox: new URL('inbox', baseUrl),
+      followers: new URL('followers', baseUrl),
+      following: new URL('following', baseUrl),
     })
   }),
-  http.get('https://solidpod.local/profile/card', () => {
-    return HttpResponse.text(
-      `<#me> <${soapPrefix}hasActor> <https://example.localhost/profile/actor>.`,
-      { headers: { 'content-type': 'text/turtle' } },
-    )
+  http.get(new URL('/profile/card', ownerWebId).toString(), () => {
+    return HttpResponse.text(`<#me> <${soapPrefix}hasActor> <${ownerActor}>.`, {
+      headers: { 'content-type': 'text/turtle' },
+    })
   }),
-  http.patch('https://solidpod.local/activitypub/followers', () => {
+  http.patch(podFollowers, () => {
     return HttpResponse.json({})
   }),
 ]
@@ -224,5 +234,13 @@ describe('Accept Follow activity from somebody', () => {
 })
 
 describe('Read a list of followers', () => {
-  it.todo('should read a list of followers')
+  it.todo('should read a list of followers', async () => {
+    await setupActor(person, appConfig.baseUrl)
+    assert.ok(person.actor)
+
+    const response = await fetch(person.actor.followers)
+
+    // console.log(response.status, await response.text())
+    expect(response.ok).toBe(true)
+  })
 })

@@ -10,5 +10,6 @@ export interface Person {
     id: string
     'soap:following': string
     'soap:followers': string
+    followers: string
   }
 }
