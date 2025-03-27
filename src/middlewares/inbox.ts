@@ -1,6 +1,7 @@
 import { getAuthenticatedFetch } from '@soid/koa'
 import { Middleware } from 'koa'
 import assert from 'node:assert/strict'
+import { schema_https } from 'rdf-namespaces'
 import { z } from 'zod'
 import { AppConfig } from '../app.js'
 import { User } from './auth.js'
@@ -51,7 +52,7 @@ const follow = async (
     body: `
     @prefix solid: <http://www.w3.org/ns/solid/terms#>.
     _:patch a solid:InsertDeletePatch;
-      solid:inserts { <${activity.actor}> <https://example.com/soid#follows> <${activity.object}>. } .`,
+      solid:inserts { <${activity.actor}> <${schema_https.follows}> <${activity.object}>. } .`,
   })
 
   assert.equal(response.ok, true)

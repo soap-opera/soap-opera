@@ -5616,6 +5616,11 @@ rdf-literal@^1.2.0, rdf-literal@^1.3.0, rdf-literal@^1.3.2:
     "@rdfjs/types" "*"
     rdf-data-factory "^1.1.0"
 
+rdf-namespaces@^1.12.0:
+  version "1.12.0"
+  resolved "https://registry.npmjs.org/rdf-namespaces/-/rdf-namespaces-1.12.0.tgz#26f58683502df686aa3c00fe9283753c52540f95"
+  integrity sha512-Fk48ltssXTmyXeoLqC0y85CEAhhWH+wvu7bkr9WxsKUyFDcKwWSHOK7CvRq3XRampy1qhSrOsIQ8U1gQDCh5MA==
+
 rdf-object@^1.14.0:
   version "1.14.0"
   resolved "https://registry.npmjs.org/rdf-object/-/rdf-object-1.14.0.tgz#a51a2e575d4f838f88eced1e5096616769d17281"

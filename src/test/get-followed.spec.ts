@@ -1,7 +1,9 @@
 import { generateCryptoKeyPair, signRequest } from '@fedify/fedify'
 import { HttpResponse, RequestHandler, http } from 'msw'
 import { setupServer } from 'msw/node'
+import { Parser } from 'n3'
 import assert from 'node:assert/strict'
+import { schema_https } from 'rdf-namespaces'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { soapPrefix } from '../config/constants.js'
 import { cryptoKeyToPem } from '../utils/crypto.js'
@@ -230,6 +232,17 @@ describe('Accept Follow activity from somebody', () => {
     const podFollowersResponse = await person.fetch(podFollowers)
 
     expect(podFollowersResponse.ok).toBe(true)
+
+    const body = await podFollowersResponse.text()
+    const parser = new Parser({
+      format: podFollowersResponse.headers.get('content-type') ?? undefined,
+    })
+    const quads = parser.parse(body)
+    expect(quads).toHaveLength(1)
+    assert.ok(quads[0]) // type narrowing
+    expect(quads[0].subject.id).toEqual(validBody.actor)
+    expect(quads[0].predicate.id).toEqual(schema_https.follows)
+    expect(quads[0].object.id).toEqual(actor)
   })
 })
 
