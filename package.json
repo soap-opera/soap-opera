@@ -4,11 +4,12 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+    "start": "yarn build && node -r dotenv/config dist/index.js",
+    "build": "rm -rf dist && tsc --project tsconfig.production.json",
     "format": "prettier . --write",
     "test": "NODE_ENV=vitest vitest",
     "lint": "eslint .",
     "knip": "knip",
-    "build": "rm -rf dist && tsc --project tsconfig.production.json",
     "save-to-pod": "tsc && node dist/scripts/saveToPod.js"
   },
   "devDependencies": {
@@ -34,6 +35,8 @@
     "@types/koa": "^2.15.0",
     "@types/koa__cors": "^5.0.0",
     "@types/koa__router": "^12.0.4",
+    "@types/n3": "^1.24.2",
+    "@types/node": "^22.13.14",
     "dotenv": "^16.4.7",
     "enquirer": "^2.4.1",
     "helmet": "^8.1.0",

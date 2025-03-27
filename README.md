@@ -2,6 +2,13 @@
 
 A layer of ActivityPub on top of a Solid Pod
 
+## Run the proof of concept
+
+- `nvm use 20`
+- `yarn install --frozen-lockfile --production`
+- copy `.env.sample` to `.env` and edit the app configuration
+- `yarn start`
+
 ## Documentation
 
 [Read what we try](./docs/)
