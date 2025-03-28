@@ -52,7 +52,11 @@ const generateDocs = ({
   username: string
   publicKey: string
 }) => {
+  const storage = new URL('/soap-opera/', pod)
+
   return `# Welcome to the experimental SoAP agent!
+
+It is an agent that provides a layer of ActivityPub on top of Solid. It's experimental and may change at any time.
 
 This is how you need to set up your Pod in order to make it work.
 
@@ -107,6 +111,17 @@ You need to add triples:
 
 <${webId}> <${soapPrefix}hasActor> <${actor}>.
 (This makes sure that actor and webId are safely linked together)
+
+## private key
+
+url: ${storage}keys/private.pem
+access: only you (and agent)
+content-type: text/plain (or similar)
+body:
+Your private key in PEM format like
+-----BEGIN PRIVATE KEY-----
+[base64 data]
+-----END PRIVATE KEY-----
 `
 }
 
