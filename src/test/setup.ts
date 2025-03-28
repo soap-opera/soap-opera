@@ -1,16 +1,17 @@
-import * as dotenv from 'dotenv'
-import { afterAll, beforeAll, beforeEach } from 'vitest'
-
-dotenv.config({ path: '.env.test' })
-
+import { getLogger } from '@logtape/logtape'
 import * as css from '@solid/community-server'
+import * as dotenv from 'dotenv'
 import { IncomingMessage, Server, ServerResponse } from 'http'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { afterAll, beforeAll, beforeEach } from 'vitest'
 import { AppConfig, createApp } from '../app.js'
 import { createRandomAccount, getRandomPort } from './helpers/index.js'
 import type { Person } from './helpers/types.js'
 
+const logger = getLogger(['soap-tests', 'setup'])
+
+dotenv.config({ path: '.env.test' })
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const appConfig: AppConfig = {
@@ -41,9 +42,7 @@ beforeAll(() => {
 
 beforeAll(async () => {
   const start = Date.now()
-
-  // eslint-disable-next-line no-console
-  console.log('Starting CSS server')
+  logger.info('Starting CSS server')
   // Community Solid Server (CSS) set up following example in https://github.com/CommunitySolidServer/hello-world-component/blob/main/test/integration/Server.test.ts
   cssServer = await new css.AppRunner().create({
     loaderProperties: {
@@ -64,13 +63,8 @@ beforeAll(async () => {
   })
   await cssServer.start()
 
-  // eslint-disable-next-line no-console
-  console.log(
-    'CSS server started on port',
-    testConfig.cssPort,
-    'in',
-    (Date.now() - start) / 1000,
-    'seconds',
+  logger.info(
+    `CSS server started on port ${testConfig.cssPort} in ${(Date.now() - start) / 1000} seconds`,
   )
 }, 60000)
 

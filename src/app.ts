@@ -19,9 +19,9 @@ export interface AppConfig {
   baseUrl: string
 }
 
-export const createApp = async (config: AppConfig) => {
-  await configureLog()
+await configureLog()
 
+export const createApp = async (config: AppConfig) => {
   const app = new Koa()
 
   app.proxy = config.isBehindProxy

@@ -6,6 +6,7 @@ export const configureLog = async () => {
   await configure({
     sinks: { console: getConsoleSink() },
     loggers: [
+      { category: 'soap-tests', sinks: ['console'], lowestLevel: 'debug' },
       { category: 'soap-opera', sinks: ['console'], lowestLevel: 'debug' },
       { category: 'fedify', sinks: ['console'], lowestLevel: 'error' },
     ],

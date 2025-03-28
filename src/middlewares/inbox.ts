@@ -1,4 +1,5 @@
 import { Accept, Follow, signRequest } from '@fedify/fedify'
+import { getLogger } from '@logtape/logtape'
 import { getAuthenticatedFetch } from '@soid/koa'
 import { Middleware } from 'koa'
 import assert from 'node:assert/strict'
@@ -7,7 +8,6 @@ import { schema_https } from 'rdf-namespaces'
 import { z } from 'zod'
 import { AppConfig } from '../app.js'
 import { importPrivateKey } from '../utils/crypto.js'
-import { User } from './auth.js'
 import {
   Activity,
   FollowActivity,
@@ -15,11 +15,12 @@ import {
 } from './validateActivity.js'
 import { Actor } from './validateOwner.js'
 
+const logger = getLogger(['soap-opera', 'inbox'])
+
 export const activityEmitter = new EventEmitter()
 
 export const processActivity: Middleware<
   {
-    user: User
     activity: Activity
     config: AppConfig
     owner: {
@@ -44,10 +45,7 @@ export const processActivity: Middleware<
             publicKeyUri: ctx.state.owner.actor.publicKey.id,
           })
         } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error('Accept response to Follow failed:')
-          // eslint-disable-next-line no-console
-          console.error(error)
+          logger.error('Accept response to Follow failed:', { error })
           throw error
         }
 

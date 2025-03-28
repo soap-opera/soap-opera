@@ -1,14 +1,10 @@
 import { verifyRequest } from '@fedify/fedify'
+import { getLogger } from '@logtape/logtape'
 import { Middleware } from 'koa'
 
-export interface User {
-  id: string
-}
+const logger = getLogger(['soap-opera', 'auth'])
 
-export const verifyHttpSignature: Middleware<{ user?: User }> = async (
-  ctx,
-  next,
-) => {
+export const verifyHttpSignature: Middleware = async (ctx, next) => {
   const normalizedHeaders: Record<string, string> = Object.entries(
     ctx.request.headers,
   ).reduce(
@@ -45,6 +41,11 @@ export const verifyHttpSignature: Middleware<{ user?: User }> = async (
     )
 
   ctx.state.user = { id: result.ownerId.toString() }
+
+  logger.info('Received signed request {method} {url}', {
+    method: ctx.req.method,
+    url: ctx.req.url,
+  })
 
   await next()
 }
