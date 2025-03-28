@@ -7,12 +7,14 @@ import { Person } from './types.js'
 
 export const setupActor = async (person: Person, app: string) => {
   const keys = await generateCryptoKeyPair()
+
   const publicKeyPem = await cryptoKeyToPem(keys.publicKey)
   const privateKeyPem = await cryptoKeyToPem(keys.privateKey)
   const actorUrl = new URL(
     'activitypub/profile/actor',
     person.podUrl,
   ).toString()
+
   const publicKeyUrl = new URL(
     'activitypub/keys/public.pem',
     person.podUrl,
@@ -39,6 +41,7 @@ export const setupActor = async (person: Person, app: string) => {
   await saveAppIdentityProvider(app, person)
   // save link from webId to actor
   await saveActorLink(actorUrl, person)
+  // save private key
   vi.useRealTimers()
 }
 
@@ -95,14 +98,7 @@ const createActor = async (
       app,
     ).toString(),
     'soap:isActorOf': person.webId,
-    'soap:followers': new URL(
-      'activitypub/followers',
-      person.podUrl,
-    ).toString(),
-    'soap:following': new URL(
-      'activitypub/following',
-      person.podUrl,
-    ).toString(),
+    'soap:storage': new URL('activitypub/', person.podUrl).toString(),
     publicKey: {
       id: actorUrl + '#main-key',
       owner: actorUrl,

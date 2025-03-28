@@ -16,6 +16,7 @@ export const followActivitySchema = baseActivitySchema.extend({
 const activitiesSchema = z.discriminatedUnion('type', [followActivitySchema])
 
 export type Activity = z.infer<typeof activitiesSchema>
+export type FollowActivity = z.infer<typeof followActivitySchema>
 
 export const validateActivity: Middleware<{
   user: User

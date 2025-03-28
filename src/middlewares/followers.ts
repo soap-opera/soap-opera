@@ -15,7 +15,7 @@ export const readFollowers: Middleware<
   { query?: { page?: string } }
 > = async ctx => {
   const followers = await readFollowersData(
-    ctx.state.owner.actor['soap:followers'],
+    ctx.state.owner.actor['soap:storage'] + 'followers',
     {
       webId: ctx.state.owner.webId,
       issuer: ctx.state.config.baseUrl,

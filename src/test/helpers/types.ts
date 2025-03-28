@@ -8,8 +8,7 @@ export interface Person {
   fetch: typeof globalThis.fetch
   actor?: {
     id: string
-    'soap:following': string
-    'soap:followers': string
+    'soap:storage': string
     followers: string
   }
 }

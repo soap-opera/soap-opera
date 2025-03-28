@@ -8,10 +8,11 @@ import { soapPrefix } from '../config/constants.js'
 const actorSchema = z.object({
   id: z.string().url(),
   'soap:isActorOf': z.string().url(),
-  'soap:followers': z.string().url(),
+  'soap:storage': z.string().url().endsWith('/'),
   followers: z.string().url(),
   following: z.string().url(),
   inbox: z.string().url(),
+  publicKey: z.object({ id: z.string().url() }),
 })
 
 export type Actor = z.infer<typeof actorSchema>
