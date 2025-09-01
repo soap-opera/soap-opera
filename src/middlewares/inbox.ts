@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { AppConfig } from '../app.js'
 import { importPrivateKey } from '../utils/crypto.js'
 import {
+  acceptFollowActivitySchema,
   Activity,
   FollowActivity,
   followActivitySchema,
@@ -35,7 +36,7 @@ export const processActivity: Middleware<
   switch (activity.type) {
     case 'Follow':
       await follow(activity, ctx.state.owner, ctx.state.config.baseUrl)
-      // respond with Accept activity after the request is sent
+      // respond with Accept activity after the request is finished
       ctx.res.on('finish', async () => {
         try {
           await acceptFollow(activity, {
@@ -53,6 +54,14 @@ export const processActivity: Middleware<
           activityEmitter.emit('acceptDispatched', null)
       })
       break
+    case 'Accept':
+      await processAccept(activity, {
+        webId: ctx.state.owner.webId,
+        app: ctx.state.config.baseUrl,
+        storage: ctx.state.owner.actor['soap:storage'],
+      })
+      break
+
     default:
       throw new Error('Unrecognized activity')
   }
@@ -60,6 +69,9 @@ export const processActivity: Middleware<
   ctx.status = 200
 }
 
+/**
+ * Save follower to Solid pod
+ */
 const follow = async (
   activity: z.infer<typeof followActivitySchema>,
   owner: { webId: string; actor: Actor },
@@ -108,7 +120,7 @@ const acceptFollow = async (
   const acceptActivity = await new Accept({
     actor: new URL(activity.object),
     object: new Follow({
-      id: new URL(activity.id),
+      id: activity.id ? new URL(activity.id) : undefined,
       actor: new URL(activity.actor),
       object: new URL(activity.object),
     }),
@@ -135,4 +147,46 @@ const acceptFollow = async (
   )
 
   await fetch(signedRequest)
+}
+
+const processAccept = async (
+  activity: z.infer<typeof acceptFollowActivitySchema>,
+  options: { storage: string; webId: string; app: string },
+) => {
+  logger.info('Processing Accept activity', activity)
+  const object = activity.object
+
+  switch (object.type) {
+    case 'Follow': {
+      const { id } = object
+      if (!id.startsWith(options.storage))
+        throw new Error('This activity does not belong to this person')
+      // fetch the local object for comparison
+      const authFetch = await getAuthenticatedFetch(options.webId, options.app)
+      const response = await authFetch(id)
+      assert.ok(response.ok)
+      const storedActivity = await response.json()
+
+      assert.equal(storedActivity.actor, object.actor)
+      assert.equal(storedActivity.object, object.object)
+
+      const followingSolid = options.storage + 'following'
+
+      const responseSolid = await authFetch(followingSolid, {
+        method: 'PATCH',
+        headers: { 'content-type': 'text/n3' },
+        body: `
+    @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+    _:patch a solid:InsertDeletePatch;
+      solid:inserts { <${object.actor}> <${schema_https.follows}> <${object.object}>. } .`,
+      })
+
+      assert.equal(responseSolid.ok, true)
+
+      break
+    }
+    default: {
+      throw new Error('Unrecognized Accept object type: ' + object.type)
+    }
+  }
 }

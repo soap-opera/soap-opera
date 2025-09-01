@@ -5,17 +5,26 @@ import { z, ZodError } from 'zod'
 const logger = getLogger(['soap-opera', 'validate-activity'])
 
 const baseActivitySchema = z.object({
-  id: z.string().url(),
+  id: z.string().url().optional(),
   type: z.string(),
   actor: z.string().url(),
 })
 
 export const followActivitySchema = baseActivitySchema.extend({
+  id: z.string().url(),
   type: z.literal('Follow'),
   object: z.string().url(),
 })
 
-const activitiesSchema = z.discriminatedUnion('type', [followActivitySchema])
+export const acceptFollowActivitySchema = baseActivitySchema.extend({
+  type: z.literal('Accept'),
+  object: followActivitySchema,
+})
+
+const activitiesSchema = z.discriminatedUnion('type', [
+  followActivitySchema,
+  acceptFollowActivitySchema,
+])
 
 export type Activity = z.infer<typeof activitiesSchema>
 export type FollowActivity = z.infer<typeof followActivitySchema>

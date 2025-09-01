@@ -9,6 +9,9 @@ export interface Person {
   actor?: {
     id: string
     'soap:storage': string
+    inbox: string
+    outbox: string
     followers: string
+    following: string
   }
 }

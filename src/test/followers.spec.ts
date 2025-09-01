@@ -13,36 +13,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { soapPrefix } from '../config/constants.js'
 import { activityEmitter } from '../middlewares/inbox.js'
 import { cryptoKeyToPem } from '../utils/crypto.js'
+import { generateFakeActor } from '../utils/fakeActor.js'
 import { removeActorLink, setupActor } from './helpers/pod.js'
 import { appConfig, person } from './setup.js'
 
 const ownerWebId = 'https://solidpod.local/profile/card#me'
 const podStorage = new URL('/activitypub/', ownerWebId).toString()
 const ownerActor = 'https://example.localhost/profile/actor'
-
-const generateFakeActor = async (url: string) => {
-  const keys = await generateCryptoKeyPair()
-  return {
-    profile: {
-      '@context': [
-        'https://www.w3.org/ns/activitystreams',
-        'https://w3id.org/security/v1',
-      ],
-      id: url,
-      type: 'Person',
-      inbox: new URL('inbox', url),
-      outbox: new URL('outbox', url),
-      followers: new URL('followers', url),
-      following: new URL('following', url),
-      publicKey: {
-        id: url + '#main-key',
-        owner: url,
-        publicKeyPem: await cryptoKeyToPem(keys.publicKey),
-      },
-    },
-    keys,
-  }
-}
 
 const fakeActors = [
   await generateFakeActor('https://example.local/actor'),

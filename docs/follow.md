@@ -10,3 +10,8 @@ The agent provides inbox and other necessary endpoints, and persists data into t
 ## Follow
 
 In order to folow, we need to send Follow activity into the inbox of the followed person.
+
+Start by POSTing an OIDC-authenticated activity into agent outbox.
+Agent processes the activity, signs it, and forwards it to the recipient's inbox.
+
+[See also this issue](https://github.com/solid/activitypub-interop/issues/7)
