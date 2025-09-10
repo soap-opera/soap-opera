@@ -55,7 +55,7 @@ export const readFollowers: Middleware<
   ctx.status = 200
 }
 
-const readFollowersData = async (
+export const readFollowersData = async (
   url: string,
   options: { actor: string; webId: string; issuer: string },
 ) => {

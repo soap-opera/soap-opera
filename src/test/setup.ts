@@ -1,11 +1,12 @@
+import { ServerType } from '@hono/node-server'
 import { getLogger } from '@logtape/logtape'
 import * as css from '@solid/community-server'
 import * as dotenv from 'dotenv'
-import { IncomingMessage, Server, ServerResponse } from 'http'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterAll, beforeAll, beforeEach } from 'vitest'
-import { AppConfig, createApp } from '../app.js'
+import { AppConfig } from '../app.js'
+import { start } from '../server.js'
 import { createRandomAccount, getRandomPort } from './helpers/index.js'
 import type { Person } from './helpers/types.js'
 
@@ -20,7 +21,7 @@ const appConfig: AppConfig = {
   baseUrl: '',
 }
 
-let server: Server<typeof IncomingMessage, typeof ServerResponse>
+let server: ServerType
 let person: Person
 let person2: Person
 let cssServer: css.App
@@ -33,11 +34,8 @@ beforeAll(() => {
   testConfig.cssPort = getRandomPort()
   testConfig.cssUrl = `http://localhost:${testConfig.cssPort}`
 
-  // appConfig.indexedGroups = [testConfig.cssUrl + '/group/group#us']
-  // appConfig.allowedGroups = appConfig.indexedGroups
   appConfig.port = getRandomPort()
   appConfig.baseUrl = `http://localhost:${appConfig.port}`
-  // appConfig.webId = new URL('/profile/card#bot', appConfig.baseUrl).toString()
 })
 
 beforeAll(async () => {
@@ -73,13 +71,7 @@ afterAll(async () => {
 })
 
 beforeAll(async () => {
-  const app = await createApp(appConfig)
-
-  server = await new Promise(resolve => {
-    const srv = app.listen(appConfig.port, () => {
-      resolve(srv)
-    })
-  })
+  server = start(appConfig)
 })
 
 afterAll(async () => {

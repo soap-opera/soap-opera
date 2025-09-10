@@ -106,9 +106,7 @@ const sendFollow = async (
 
   const authFetch = await getAuthenticatedFetch(options.webId, options.app)
 
-  const privateKeyResponse = await authFetch(
-    new URL('keys/private.pem', options.storage),
-  )
+  const privateKeyResponse = await authFetch(new URL('keys/', options.storage))
   assert.ok(privateKeyResponse.ok)
   const privateKey = await privateKeyResponse.text()
 

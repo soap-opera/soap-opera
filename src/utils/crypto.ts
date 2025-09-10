@@ -50,3 +50,45 @@ export async function importPrivateKey(pem: string) {
     ['sign'], // allowed usages
   )
 }
+
+interface PublicKeyOptions {
+  algorithm?: string
+  hash?: string
+  usage?: KeyUsage[]
+}
+
+export async function importPublicKey(
+  pemString: string,
+  options: PublicKeyOptions = {},
+): Promise<CryptoKey> {
+  const {
+    algorithm = 'RSASSA-PKCS1-v1_5',
+    hash = 'SHA-256',
+    usage = ['verify'],
+  } = options
+
+  // Remove PEM headers and whitespace
+  const base64 = pemString
+    .replace(/-----BEGIN PUBLIC KEY-----/, '')
+    .replace(/-----END PUBLIC KEY-----/, '')
+    .replace(/\s/g, '')
+
+  // Convert base64 to ArrayBuffer
+  const binaryString = atob(base64)
+  const bytes = new Uint8Array(binaryString.length)
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i)
+  }
+
+  // Import as CryptoKey
+  return await webcrypto.subtle.importKey(
+    'spki',
+    bytes.buffer,
+    {
+      name: algorithm,
+      hash,
+    },
+    true,
+    usage,
+  )
+}
