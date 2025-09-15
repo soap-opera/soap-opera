@@ -6,7 +6,7 @@ import assert from 'node:assert/strict'
 import { beforeEach } from 'node:test'
 import { schema_https } from 'rdf-namespaces'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { generateFakeActor } from '../utils/fakeActor.js'
+import { generateFakeActor } from './helpers/fakeActor.js'
 import { setupActor } from './helpers/pod.js'
 import { Person } from './helpers/types.js'
 import { appConfig, person, person2 } from './setup.js'
@@ -266,6 +266,7 @@ describe('Following', () => {
 
       // check that the data are saved in Solid pod
       const podFollowing = person.actor['soap:storage'] + 'following'
+
       const podFollowingResponse = await person.fetch(podFollowing)
       expect(podFollowingResponse.status).toBe(200)
       expect(podFollowingResponse.ok).toBe(true)
@@ -291,7 +292,12 @@ describe('Following', () => {
       await setupActor(person, appConfig.baseUrl)
       assert.ok(person.actor)
 
-      const response = await fetch(person.actor.following)
+      const response = await fetch(person.actor.following, {
+        headers: {
+          Accept:
+            'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
+        },
+      })
 
       expect(response.ok).toBe(true)
       expect(response.headers.get('content-type')).toEqual(
@@ -312,7 +318,12 @@ describe('Following', () => {
       for (const factor of fakeActors)
         await runFullFollowInteraction({ actor: person, object: factor })
 
-      const response = await fetch(person.actor.following)
+      const response = await fetch(person.actor.following, {
+        headers: {
+          Accept:
+            'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
+        },
+      })
       expect(response.ok).toBe(true)
       expect(response.headers.get('content-type')).toEqual(
         'application/activity+json',
@@ -320,15 +331,19 @@ describe('Following', () => {
       const collection = await response.json()
       expect(collection.totalItems).toEqual(fakeActors.length)
       expect(collection.id).toEqual(person.actor.following)
-      expect(collection.first).toEqual(collection.id + '?page=1')
+      expect(collection.first).toEqual(collection.id + '?cursor=1')
 
-      const firstResponse = await fetch(collection.first)
+      const firstResponse = await fetch(collection.first, {
+        headers: {
+          Accept:
+            'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
+        },
+      })
       expect(firstResponse.ok).toBe(true)
       expect(firstResponse.headers.get('content-type')).toEqual(
         'application/activity+json',
       )
       const collectionPage1 = await firstResponse.json()
-      expect(collectionPage1.totalItems).toEqual(2)
       expect(collectionPage1.id).toEqual(collection.first)
       expect(collectionPage1.partOf).toEqual(collection.id)
       fakeActors.forEach(actor => {

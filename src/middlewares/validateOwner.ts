@@ -1,28 +1,11 @@
 import { Middleware } from 'koa'
 import { DataFactory, Parser, Store } from 'n3'
 import assert from 'node:assert/strict'
-import { z } from 'zod'
 import { AppConfig } from '../app.js'
 import { soapPrefix } from '../config/constants.js'
+import { Actor, actorSchema } from '../validation/owner.js'
 
-export const actorSchema = z.object({
-  id: z.string().url(),
-  preferredUsername: z.string().optional(),
-  'soap:isActorOf': z.string().url(),
-  'soap:storage': z.string().url().endsWith('/'),
-  followers: z.string().url(),
-  following: z.string().url(),
-  inbox: z.string().url(),
-  publicKey: z.object({ id: z.string().url(), publicKeyPem: z.string() }),
-})
-
-export type Actor = z.infer<typeof actorSchema>
-export interface OwnerState {
-  webId: string
-  actor: Actor
-}
-
-export const validateOwnerRaw = async (actor: string, baseUrl: string) => {
+const validateOwnerRaw = async (actor: string, baseUrl: string) => {
   // fetch owner and get link to webId
   // TODO improve error messages when things fail
   const ownerResponse = await fetch(actor)

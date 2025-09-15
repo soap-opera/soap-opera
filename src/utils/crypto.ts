@@ -39,6 +39,7 @@ function pemToArrayBuffer(pem: string) {
 // Adjust algorithm details and usages as needed.
 export async function importPrivateKey(pem: string) {
   const keyData = pemToArrayBuffer(pem)
+
   return await webcrypto.subtle.importKey(
     'pkcs8', // format of the key
     keyData,

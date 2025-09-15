@@ -2,22 +2,17 @@ import { bodyParser } from '@koa/bodyparser'
 import cors from '@koa/cors'
 import Router from '@koa/router'
 import { solidIdentity } from '@soid/koa'
-import Koa from 'koa'
+import Koa, { Context } from 'koa'
 import koaHelmet from 'koa-helmet'
-import {
-  allowOwner,
-  solidAuth,
-  verifyHttpSignature,
-} from './middlewares/auth.js'
-import { readFollowers } from './middlewares/followers.js'
-import { readFollowing } from './middlewares/following.js'
-import { processActivity } from './middlewares/inbox.js'
+import { allowOwner, solidAuth } from './middlewares/auth.js'
+import { ContextData, federation } from './middlewares/federation.js'
+import { integrateFederation } from './middlewares/fedify-koa-integration.js'
 import { loadConfig } from './middlewares/loadConfig.js'
 import { processActivity as processOutboxActivity } from './middlewares/outbox.js'
 import { setupDocs } from './middlewares/setupDocs.js'
-import { validateActivity } from './middlewares/validateActivity.js'
-import { Actor, validateOwner } from './middlewares/validateOwner.js'
+import { validateOwner } from './middlewares/validateOwner.js'
 import { configureLog } from './utils/log.js'
+import { Actor } from './validation/owner.js'
 
 export interface AppConfig {
   isBehindProxy: boolean
@@ -35,12 +30,14 @@ export const createApp = async (config: AppConfig) => {
 
   router
     .use(solidIdentity('https://example.com', config.baseUrl).routes())
-    .post(
-      '/users/:actor/inbox',
-      verifyHttpSignature,
-      validateActivity,
-      validateOwner,
-      processActivity,
+    .get('/', setupDocs)
+    .all('/users/:actor/(.+)', validateOwner)
+    .all(
+      '/users/:actor/(.+)',
+      integrateFederation<ContextData>(federation, (ctx: Context) => ({
+        config,
+        owner: ctx.state.owner.actor,
+      })),
     )
     .post<
       {
@@ -49,16 +46,7 @@ export const createApp = async (config: AppConfig) => {
         config: AppConfig
       },
       { params: { actor: string } }
-    >(
-      '/users/:actor/outbox',
-      solidAuth,
-      validateOwner,
-      allowOwner,
-      processOutboxActivity,
-    )
-    .get('/users/:actor/followers', validateOwner, readFollowers)
-    .get('/users/:actor/following', validateOwner, readFollowing)
-    .get('/', setupDocs)
+    >('/users/:actor/outbox', solidAuth, allowOwner, processOutboxActivity)
 
   app
     .use(koaHelmet.default())

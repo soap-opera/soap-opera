@@ -20,9 +20,8 @@ import {
   vi,
 } from 'vitest'
 import { soapPrefix } from '../config/constants.js'
-import { Activity } from '../middlewares/validateActivity.js'
 import { cryptoKeyToPem } from '../utils/crypto.js'
-import { generateFakeActor } from '../utils/fakeActor.js'
+import { generateFakeActor } from './helpers/fakeActor.js'
 import { removeActorLink, setupActor } from './helpers/pod.js'
 import { appConfig, person } from './setup.js'
 
@@ -268,7 +267,11 @@ describe('Followers', () => {
       })
       expect(verified).toBeTruthy()
 
-      const acceptActivity = (await capturedRequest.json()) as Activity
+      const acceptActivity = (await capturedRequest.json()) as {
+        type: string
+        actor: string
+        object: { actor: string; object: string; type: string }
+      }
 
       expect(acceptActivity.type).toEqual('Accept')
       expect(acceptActivity.actor).toEqual(person.actor.id)

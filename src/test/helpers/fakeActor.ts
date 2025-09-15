@@ -1,6 +1,6 @@
 import { generateCryptoKeyPair } from '@fedify/fedify'
 import { randomUUID } from 'node:crypto'
-import { cryptoKeyToPem } from './crypto.js'
+import { cryptoKeyToPem } from '../../utils/crypto.js'
 
 export const generateFakeActor = async (url: string) => {
   const keys = await generateCryptoKeyPair('RSASSA-PKCS1-v1_5')
