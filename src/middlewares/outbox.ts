@@ -3,11 +3,10 @@ import { getAuthenticatedFetch } from '@soid/koa'
 import type { Middleware } from 'koa'
 import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
-import { z } from 'zod'
 import { AppConfig } from '../app.js'
 import { importPrivateKey } from '../utils/crypto.js'
-import { followActivitySchema } from './validateActivity.js'
-import { Actor } from './validateOwner.js'
+import { FollowActivity, followActivitySchema } from '../validation/activity.js'
+import { Actor } from '../validation/owner.js'
 
 export const processActivity: Middleware<{
   config: AppConfig
@@ -15,8 +14,10 @@ export const processActivity: Middleware<{
 }> = async ctx => {
   const activityReceived = ctx.request.body
 
+  const validActivity = followActivitySchema.parse(activityReceived)
+
   // remember temporary follow activity until we get Accept
-  const activity = await saveTemporaryFollow(activityReceived, {
+  const activity = await saveTemporaryFollow(validActivity, {
     storage: ctx.state.owner.actor['soap:storage'],
     webId: ctx.state.owner.webId,
     app: ctx.state.config.baseUrl,
@@ -39,7 +40,7 @@ export const processActivity: Middleware<{
  * Save the Follow activity that has not yet been accepted or rejected by the target
  */
 const saveTemporaryFollow = async (
-  activity: z.infer<typeof followActivitySchema>,
+  activity: FollowActivity,
   options: { storage: string; webId: string; app: string },
 ) => {
   const uri = new URL(`activities/${randomUUID()}`, options.storage)
