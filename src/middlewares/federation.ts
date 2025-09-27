@@ -31,29 +31,8 @@ export const federation = createFederation<ContextData>({
 })
 
 function fixContext(ctx: Context<{ owner: Actor }>) {
-  // @ts-expect-error replacing protected function
-  if (ctx.prevGetKeyPairs) return
-  // @ts-expect-error replacing protected function
-  ctx.prevGetKeyPairs = ctx.getKeyPairsFromIdentifier
   ctx.getActorUri = function (identifier: string) {
     return new URL(decodeURIComponent(identifier))
-  }
-
-  // @ts-expect-error replacing protected function
-  ctx.getKeyPairsFromIdentifier = async function (
-    identifier: string,
-  ): Promise<(CryptoKeyPair & { keyId: URL })[]> {
-    // @ts-expect-error replacing protected function
-    const keyPairs = await ctx.prevGetKeyPairs(identifier)
-    // @ts-expect-error replacing protected function so we're fine with any
-    return keyPairs.map((kp, i) => ({
-      ...kp,
-      keyId: new URL(
-        // For backwards compatibility, the first key is always the #main-key:
-        i == 0 ? `#main-key` : `#key-${i + 1}`,
-        decodeURIComponent(identifier),
-      ),
-    }))
   }
 }
 

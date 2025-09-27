@@ -2237,10 +2237,10 @@
   resolved "https://registry.npmjs.org/@fastify/busboy/-/busboy-2.1.1.tgz"
   integrity sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==
 
-"@fedify/fedify@^1.8.8":
-  version "1.8.8"
-  resolved "https://registry.npmjs.org/@fedify/fedify/-/fedify-1.8.8.tgz#9343257d7c9d6bea2cca99c258e8aff39a7f099d"
-  integrity sha512-1w5YfKbh8wNbcJ1s0Ttb2l3i4oiWmQ7z5sbKqQJMhBW6odaGGVgEO2bl6ZI5Tg0i5o/LK3ODOKLTlr8F1wibHA==
+"@fedify/fedify@1.9.0-pr.422.1611":
+  version "1.9.0-pr.422.1611"
+  resolved "https://registry.npmjs.org/@fedify/fedify/-/fedify-1.9.0-pr.422.1611.tgz#e1035fb66e15cccbf2cf82033a138391cec7fc10"
+  integrity sha512-+9kM9PEuUvzlkgRGFpEvkg1z29m1s/7qmc0ka5ZzCrnTBeQYpAqhIMB3BUdFp8gOcuq2XTqTfVARC/0apclB1A==
   dependencies:
     "@cfworker/json-schema" "^4.1.1"
     "@hugoalh/http-header-link" "^1.0.2"
