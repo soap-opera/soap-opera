@@ -32,18 +32,15 @@ export const federation = createFederation<ContextData>({
 
 function fixContext(ctx: Context<{ owner: Actor }>) {
   ctx.getActorUri = function (identifier: string) {
-    return new URL(decodeURIComponent(identifier))
+    return new URL(identifier)
   }
 }
 
 federation
-  // @ts-expect-error +identifier not supported by @fedify, but works
-  .setActorDispatcher('/users/{+identifier}', async (ctx, identifier) => {
-    if (identifier.includes('/')) return null
-
+  .setActorDispatcher('/users/{identifier}', async (ctx, identifier) => {
     fixContext(ctx)
 
-    const actor = decodeURIComponent(identifier)
+    const actor = identifier
     const resp = await fetch(actor)
     const actorDataRaw = await resp.json()
 
@@ -57,8 +54,8 @@ federation
       publicKey: new CryptographicKey({
         publicKey: await importPem(actorData.publicKey.publicKeyPem),
       }),
-      followers: ctx.getFollowersUri(decodeURIComponent(identifier)),
-      following: ctx.getFollowingUri(decodeURIComponent(identifier)),
+      followers: ctx.getFollowersUri(identifier),
+      following: ctx.getFollowingUri(identifier),
     })
   })
   .setKeyPairsDispatcher(async ctx => {
@@ -87,29 +84,21 @@ federation
   })
 
 federation
-  // @ts-expect-error +identifier is not supported by fedify but works
-  .setInboxListeners('/users/{+identifier}/inbox', '/inbox')
+  .setInboxListeners('/users/{identifier}/inbox')
   .on(Follow, async (ctx, follow) => {
     fixContext(ctx)
-    if (
-      follow.id == null ||
-      follow.actorId == null ||
-      follow.objectId == null
-    ) {
+    if (follow.id == null || follow.actorId == null || follow.objectId == null)
       return
-    }
-    if (
-      !ctx.recipient ||
-      follow.objectId.toString() !== decodeURIComponent(ctx.recipient)
-    )
-      return
+
+    if (!ctx.recipient || follow.objectId.toString() !== ctx.recipient) return
+
     const follower = await follow.getActor(ctx)
     if (follower === null) return
     const authFetch = await getAuthenticatedFetch(
       ctx.data.owner['soap:isActorOf'],
       ctx.data.config.baseUrl,
     )
-    const followersSolid = ctx.data.owner['soap:storage'] + 'followers'
+    const followersSolid = new URL('followers', ctx.data.owner['soap:storage'])
 
     const response = await authFetch(followersSolid, {
       method: 'PATCH',
@@ -122,7 +111,7 @@ federation
 
     assert.equal(response.ok, true)
     await ctx.sendActivity(
-      { identifier: decodeURIComponent(ctx.recipient) },
+      { identifier: ctx.recipient },
       follower,
       new Accept({ actor: follow.objectId, object: follow }),
     )
@@ -168,9 +157,8 @@ const PAGE_SIZE = 10
 const FIRST_PAGE = 1
 federation
   .setFollowersDispatcher(
-    // @ts-expect-error +identifier not supported by fedify types, but is necessary for correct identifier expansion
-    `/users/{+identifier}/followers`,
-    async (ctx, identifier, cursor) => {
+    `/users/{identifier}/followers`,
+    async (ctx, _identifier, cursor) => {
       fixContext(ctx)
       const cursorSchema = z.union([
         z.coerce.number().int().min(FIRST_PAGE),
@@ -253,22 +241,21 @@ federation
 
 federation
   .setFollowingDispatcher(
-    // @ts-expect-error +identifier not supported by fedify types, but is necessary for correct identifier expansion
-    `/users/{+identifier}/following`,
-    async (ctx, identifier, cursor) => {
+    `/users/{identifier}/following`,
+    async (ctx, _identifier, cursor) => {
       fixContext(ctx)
       const cursorSchema = z.union([
         z.coerce.number().int().min(FIRST_PAGE),
         z.null(),
       ])
-      const actorSchema = z.object({
-        id: z.string().url(),
-        inbox: z.string().url(),
-      })
+      // const actorSchema = z.object({
+      //   id: z.string().url(),
+      //   inbox: z.string().url(),
+      // })
       const validCursor = cursorSchema.parse(cursor)
       // read following from Solid Pod
       const following = await readFollowingData(
-        ctx.data.owner['soap:storage'] + 'following',
+        new URL('following', ctx.data.owner['soap:storage']),
         {
           actor: ctx.data.owner.id,
           webId: ctx.data.owner['soap:isActorOf'],
@@ -284,29 +271,32 @@ federation
 
       // fetch these followed actors and find their inboxes
       // TODO cache
-      const fetchedActorsResults = await Promise.allSettled(
-        followingPage.map(async following => {
-          const result = await fetch(following)
-          const rawData = await result.json()
-          const actor = actorSchema.parse(rawData)
-          return actor
-        }),
-      )
+      // const fetchedActorsResults = await Promise.allSettled(
+      //   followingPage.map(async following => {
+      //     const result = await fetch(following)
+      //     const rawData = await result.json()
+      //     const actor = actorSchema.parse(rawData)
+      //     return actor
+      //   }),
+      // )
 
-      const followingWithInboxes = fetchedActorsResults
-        .filter(
-          (
-            result,
-          ): result is PromiseFulfilledResult<z.infer<typeof actorSchema>> =>
-            result.status === 'fulfilled',
-        )
-        .map(result => ({
-          id: new URL(result.value.id),
-          inboxId: new URL(result.value.inbox),
-        }))
+      // const followingWithInboxes = fetchedActorsResults
+      //   .filter(
+      //     (
+      //       result,
+      //     ): result is PromiseFulfilledResult<z.infer<typeof actorSchema>> =>
+      //       result.status === 'fulfilled',
+      //   )
+      //   .map(
+      //     result =>
+      //       new Person({
+      //         id: new URL(result.value.id),
+      //         inbox: new URL(result.value.inbox),
+      //       }),
+      //   )
 
       return {
-        items: followingWithInboxes,
+        items: followingPage.map(f => new URL(f)), //followingWithInboxes,
         nextCursor:
           validCursor === null
             ? undefined
@@ -326,7 +316,7 @@ federation
   .setCounter(async ctx => {
     fixContext(ctx)
     const following = await readFollowingData(
-      ctx.data.owner['soap:storage'] + 'following',
+      new URL('following', ctx.data.owner['soap:storage']),
       {
         actor: ctx.data.owner.id,
         webId: ctx.data.owner['soap:isActorOf'],
@@ -335,6 +325,7 @@ federation
     )
     return following.length
   })
+
 function paginateArray<T>(items: T[], page: number, pageSize: number): T[] {
   const startIndex = (page - 1) * pageSize
   const endIndex = startIndex + pageSize

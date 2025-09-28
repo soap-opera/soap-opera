@@ -7,7 +7,7 @@ import { schema_https } from 'rdf-namespaces'
 // TODO some proper refactor
 
 export const readFollowingData = async (
-  url: string,
+  url: string | URL,
   options: { actor: string; webId: string; issuer: string },
 ) => {
   const authFetch = await getAuthenticatedFetch(options.webId, options.issuer)
