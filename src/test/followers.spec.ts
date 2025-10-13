@@ -10,6 +10,7 @@ import { Parser } from 'n3'
 import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 import { schema_https } from 'rdf-namespaces'
+import encodeURIComponent from 'strict-uri-encode'
 import {
   afterAll,
   beforeAll,

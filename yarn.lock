@@ -3166,6 +3166,11 @@
   resolved "https://registry.npmjs.org/@types/statuses/-/statuses-2.0.5.tgz"
   integrity sha512-jmIUGWrAiwu3dZpxntxieC+1n/5c3mjrImkmOSQ2NC5uP6cYO4aAZDdSmRcI5C1oiTmqlZGHC+/NmJrKogbP5A==
 
+"@types/strict-uri-encode@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.npmjs.org/@types/strict-uri-encode/-/strict-uri-encode-2.0.2.tgz#a7a04d82defe95219fe99bd91f3b1a0af437b77b"
+  integrity sha512-kC6ZIzFuf4UFsVFCJEHtVB4YUyTHfZiYQ5fE79MdlWvLzsWb/fDIC8oU1qRv4qLdK4532dkyALDb45yd1ddyeg==
+
 "@types/tough-cookie@^4.0.5":
   version "4.0.5"
   resolved "https://registry.npmjs.org/@types/tough-cookie/-/tough-cookie-4.0.5.tgz"
@@ -6340,6 +6345,11 @@ strict-event-emitter@^0.5.1:
   version "0.5.1"
   resolved "https://registry.npmjs.org/strict-event-emitter/-/strict-event-emitter-0.5.1.tgz"
   integrity sha512-vMgjE/GGEPEFnhFub6pa4FmJBRBVOLpIII2hvCZ8Kzb7K0hlHo7mQv6xYrBvCL2LtAIBwFUK8wvuJgTVSQ5MFQ==
+
+strict-uri-encode@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/strict-uri-encode/-/strict-uri-encode-2.0.0.tgz#b9c7330c7042862f6b142dc274bbcc5866ce3546"
+  integrity sha512-QwiXZgpRcKkhTj2Scnn++4PKtWsH0kpzZ62L2R6c/LUVYv7hVnZqcg2+sMuT6R7Jusu1vviK/MFsu6kNJfWlEQ==
 
 string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"

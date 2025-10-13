@@ -1,5 +1,6 @@
 import { Middleware } from 'koa'
 import { solid } from 'rdf-namespaces'
+import encodeURIComponent from 'strict-uri-encode'
 import { AppConfig } from '../app.js'
 import { soapPrefix } from '../config/constants.js'
 

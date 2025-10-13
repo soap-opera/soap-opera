@@ -1,4 +1,5 @@
 import { generateCryptoKeyPair } from '@fedify/fedify'
+import encodeURIComponent from 'strict-uri-encode'
 import { expect, vi } from 'vitest'
 import { soapPrefix } from '../../config/constants.js'
 import { cryptoKeyToPem } from '../../utils/crypto.js'

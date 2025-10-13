@@ -1,6 +1,7 @@
 import { Middleware } from 'koa'
 import { DataFactory, Parser, Store } from 'n3'
 import assert from 'node:assert/strict'
+import encodeURIComponent from 'strict-uri-encode'
 import { AppConfig } from '../app.js'
 import { soapPrefix } from '../config/constants.js'
 import { Actor, actorSchema } from '../validation/owner.js'
