@@ -373,7 +373,7 @@ const createSignedFollowRequest = async (
   return signedRequest
 }
 
-const sendSignedFollowRequest = async (
+export const sendSignedFollowRequest = async (
   ...options: Parameters<typeof createSignedFollowRequest>
 ) => {
   const signedRequest = await createSignedFollowRequest(...options)

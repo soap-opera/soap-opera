@@ -49,7 +49,7 @@ export const allowOwner: Middleware<{
 
   const matches = ctx.state.user.webId === ctx.state.owner.webId
 
-  if (!matches) ctx.throw(403)
+  if (!matches) return ctx.throw(403)
 
   return await next()
 }

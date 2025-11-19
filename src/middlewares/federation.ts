@@ -1,10 +1,11 @@
 import {
   Accept,
+  Activity,
   Context,
   createFederation,
   CryptographicKey,
   Follow,
-  importPem,
+  // importPem,
   MemoryKvStore,
   Person,
 } from '@fedify/fedify'
@@ -30,7 +31,7 @@ export const federation = createFederation<ContextData>({
   kv: new MemoryKvStore(),
 })
 
-function fixContext(ctx: Context<{ owner: Actor }>) {
+export function fixContext(ctx: Context<{ owner: Actor }>) {
   ctx.getActorUri = function (identifier: string) {
     return new URL(identifier)
   }
@@ -52,7 +53,7 @@ federation
       url: new URL('/', ctx.url),
       inbox: new URL(actorData.inbox),
       publicKey: new CryptographicKey({
-        publicKey: await importPem(actorData.publicKey.publicKeyPem),
+        publicKey: await importPublicKey(actorData.publicKey.publicKeyPem),
       }),
       followers: ctx.getFollowersUri(identifier),
       following: ctx.getFollowingUri(identifier),
@@ -118,7 +119,20 @@ federation
   })
   .on(Accept, async (ctx, activity) => {
     logger.info('Processing Accept activity', { activity })
-    const object = await activity.getObject()
+
+    // console.log(activity)
+
+    // const object = await activity.getObject()
+
+    // console.log(object)
+    const rawActivity = await activity.toJsonLd()
+    const object = await Activity.fromJsonLd({
+      // @ts-expect-error just a TODO
+      ...rawActivity.object,
+      '@context': 'https://www.w3.org/ns/activitystreams',
+    })
+
+    // console.log(rawActivity.object, object)
 
     if (object instanceof Follow) {
       const { id } = object
@@ -325,6 +339,17 @@ federation
     )
     return following.length
   })
+
+federation.setObjectDispatcher(
+  Activity,
+  `/users/{identifier}/activities/{activity}`,
+  (ctx, { identifier, activity }) => {
+    // TODO
+    // eslint-disable-next-line no-console
+    console.log(ctx, identifier, activity)
+    return null
+  },
+)
 
 function paginateArray<T>(items: T[], page: number, pageSize: number): T[] {
   const startIndex = (page - 1) * pageSize

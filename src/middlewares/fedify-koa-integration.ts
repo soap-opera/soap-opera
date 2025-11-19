@@ -53,7 +53,7 @@ export function integrateFederation<TContextData>(
   }
 }
 
-function fromKoaRequest(ctx: Context): Request {
+export function fromKoaRequest(ctx: Context): Request {
   const url = `${ctx.request.origin}${ctx.request.url}`
   const headers = new Headers()
 
