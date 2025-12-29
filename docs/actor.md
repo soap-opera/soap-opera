@@ -28,15 +28,15 @@ Resources:
 
 - `PUT` the actor with content-type `application/activity+json`. This will be then served with the same `content-type`.
 
-
 Instructions are provided at the configured base url of the agent, optionally customized based on query parameters for:
+
 - webid, e.g. `https://username.mypod.example/profile/card#me`
 - pod, by default derived from webid, e.g. `https://username.mypod.example`
 - actor, e.g. at the default path `https://username.mypod.example/soap-opera/profile/actor`
--  username, by default the subdomain of the pod, e.g. `username`
--  pubkey, e.g. `'-----BEGIN PUBLIC KEY-----\nyour-base64-encoded-public-key\n-----END PUBLIC KEY-----'`
+- username, by default the subdomain of the pod, e.g. `username`
+- pubkey, e.g. `'-----BEGIN PUBLIC KEY-----\nyour-base64-encoded-public-key\n-----END PUBLIC KEY-----'`
 
-The storage will be at the hardcoded path on the pod `/soap-opera/`, e.g. `https://username.mypod.example/soap-opera/`. The private key is stored in the storage at `keys/private.pem`, e.g. `https://username.mypod.example/soap-opera/keys/private.pem` 
+The storage will be at the hardcoded path on the pod `/soap-opera/`, e.g. `https://username.mypod.example/soap-opera/`. The private key is stored in the storage at `keys/private.pem`, e.g. `https://username.mypod.example/soap-opera/keys/private.pem`
 
 The webfinger and actor are setup on the pod, resulting in a webfinger of the form, e.g. `@username@username.mypod.example` but the inbox, outbox, following and follower collections will be defined on the agent.
 

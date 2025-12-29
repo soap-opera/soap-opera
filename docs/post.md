@@ -4,4 +4,4 @@ Start by POSTing an OIDC-authenticated activity into agent outbox. Agent process
 
 The private key is obtained from the storage at `keys/private.pem`
 
-Notes are stored in the storage at  `things/${noteId}` where `noteId` is `Date.now() + '__' + randomUUID()` and made available on the agent at `users/${actor.id}/things/${noteId}`
+Notes are stored in the storage at `things/${noteId}` where `noteId` is `Date.now() + '__' + randomUUID()` and made available on the agent at `users/${actor.id}/things/${noteId}`
