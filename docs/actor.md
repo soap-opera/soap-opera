@@ -34,7 +34,7 @@ Instructions are provided at the configured base url of the agent, optionally cu
 - pod, by default derived from webid, e.g. `https://username.mypod.example`
 - actor, e.g. at the default path `https://username.mypod.example/soap-opera/profile/actor`
 - username, by default the subdomain of the pod, e.g. `username`
-- pubkey, e.g. `'-----BEGIN PUBLIC KEY-----\nyour-base64-encoded-public-key\n-----END PUBLIC KEY-----'` 
+- pubkey, e.g. `'-----BEGIN PUBLIC KEY-----\nyour-base64-encoded-public-key\n-----END PUBLIC KEY-----'`
 
 The webfinger and actor are setup on the pod, resulting in a webfinger of the form, e.g. `@username@username.mypod.example` but the inbox, outbox, following and follower collections will be defined on the agent.
 
