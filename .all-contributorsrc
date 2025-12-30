@@ -1,0 +1,28 @@
+{
+  "projectName": "soap-opera",
+  "projectOwner": "soap-opera",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": ["README.md"],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "mrkvon",
+      "name": "mrkvon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7449720?v=4",
+      "profile": "https://mrkvon.org/",
+      "contributions": ["code", "review", "ideas"]
+    },
+    {
+      "login": "jg10-mastodon-social",
+      "name": "jg10",
+      "avatar_url": "https://avatars.githubusercontent.com/u/181532694?v=4",
+      "profile": "https://jg10.solidcommunity.net/devlog/home.html",
+      "contributions": ["doc", "ideas", "bug"]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false
+}
