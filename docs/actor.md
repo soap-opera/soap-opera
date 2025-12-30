@@ -34,13 +34,13 @@ Instructions are provided at the configured base url of the agent, optionally cu
 - pod, by default derived from webid, e.g. `https://username.mypod.example`
 - actor, e.g. at the default path `https://username.mypod.example/soap-opera/profile/actor`
 - username, by default the subdomain of the pod, e.g. `username`
-- pubkey, e.g. `'-----BEGIN PUBLIC KEY-----\nyour-base64-encoded-public-key\n-----END PUBLIC KEY-----'`
-
-The storage will be at the hardcoded path on the pod `/soap-opera/`, e.g. `https://username.mypod.example/soap-opera/`. The private key is stored in the storage at `keys/private.pem`, e.g. `https://username.mypod.example/soap-opera/keys/private.pem`
+- pubkey, e.g. `'-----BEGIN PUBLIC KEY-----\nyour-base64-encoded-public-key\n-----END PUBLIC KEY-----'` 
 
 The webfinger and actor are setup on the pod, resulting in a webfinger of the form, e.g. `@username@username.mypod.example` but the inbox, outbox, following and follower collections will be defined on the agent.
 
-The actor provides links to the webid and storage using `soap:isActorOf` and `soap:storage` respectively.
+The actor provides links to the webid and storage using `soap:isActorOf` and `soap:storage` respectively. The storage is on the pod in a location that is writeable with the nominated webid, e.g. `https://username.mypod.example/soap-opera/`
+
+The private key is stored in the storage at `keys/private.pem`, e.g. `https://username.mypod.example/soap-opera/keys/private.pem`
 
 ## To test
 
