@@ -42,7 +42,7 @@ export const setupActor = async (person: Person, app: string) => {
   await saveAppIdentityProvider(app, person)
   // save link from webId to actor
   await saveActorLink(actorUrl, person)
-  // save private key
+  // jump 121 seconds to invalidate webId cache
   await vi.advanceTimersByTimeAsync(121_000)
 }
 
