@@ -3,6 +3,7 @@ import encodeURIComponent from 'strict-uri-encode'
 import { expect, vi } from 'vitest'
 import { soapPrefix } from '../../config/constants.js'
 import { cryptoKeyToPem } from '../../utils/crypto.js'
+import { logger } from '../setup.js'
 import { getAcl } from './index.js'
 import { Person } from './types.js'
 
@@ -61,6 +62,15 @@ const createWebfinger = async (person: Person, actorUrl: string) => {
         },
       ],
     }),
+  })
+
+  const data = await response.text()
+  // eslint-disable-next-line no-console
+  console.log('response status', response.status, response.ok, data)
+  logger.debug('response status {status} {ok} {data}', {
+    status: response.status,
+    ok: response.ok,
+    data,
   })
 
   expect(response.ok).toBe(true)

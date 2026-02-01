@@ -9,7 +9,7 @@ import { AppConfig, createApp } from '../app.js'
 import { createRandomAccount, getRandomPort } from './helpers/index.js'
 import type { Person } from './helpers/types.js'
 
-const logger = getLogger(['soap-tests', 'setup'])
+export const logger = getLogger(['soap-tests', 'setup'])
 
 dotenv.config({ path: '.env.test' })
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -56,7 +56,7 @@ beforeAll(async () => {
     // https://github.com/CommunitySolidServer/CommunitySolidServer/tree/main#-parameters
     shorthand: {
       port: testConfig.cssPort,
-      loggingLevel: 'off',
+      loggingLevel: 'debug',
       baseUrl: testConfig.cssUrl,
       // seedConfig: css.joinFilePath(__dirname, './css-pod-seed.json'), // set up some Solid accounts
     },
