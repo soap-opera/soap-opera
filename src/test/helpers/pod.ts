@@ -30,7 +30,7 @@ export const setupActor = async (person: Person, app: string) => {
   // https://github.com/CommunitySolidServer/access-token-verifier/blob/718f7dde42df358f339e78b836d909f10df099a5/src/config/index.ts#L16
   vi.useFakeTimers({ now: Date.now() - 121000, shouldAdvanceTime: true })
 
-  // await new Promise(resolve => setTimeout(resolve, 100))
+  await new Promise(resolve => setTimeout(resolve, 100))
 
   // save well-known
   await createWebfinger(person, actorUrl)
