@@ -56,7 +56,7 @@ beforeAll(async () => {
     // https://github.com/CommunitySolidServer/CommunitySolidServer/tree/main#-parameters
     shorthand: {
       port: testConfig.cssPort,
-      loggingLevel: 'debug',
+      loggingLevel: 'off',
       baseUrl: testConfig.cssUrl,
       // seedConfig: css.joinFilePath(__dirname, './css-pod-seed.json'), // set up some Solid accounts
     },
