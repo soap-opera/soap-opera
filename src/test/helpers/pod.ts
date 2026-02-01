@@ -3,7 +3,6 @@ import encodeURIComponent from 'strict-uri-encode'
 import { expect, vi } from 'vitest'
 import { soapPrefix } from '../../config/constants.js'
 import { cryptoKeyToPem } from '../../utils/crypto.js'
-import { logger } from '../setup.js'
 import { getAcl } from './index.js'
 import { Person } from './types.js'
 
@@ -30,6 +29,7 @@ export const setupActor = async (person: Person, app: string) => {
   // https://github.com/CommunitySolidServer/access-token-verifier/blob/718f7dde42df358f339e78b836d909f10df099a5/src/config/index.ts#L16
   vi.useFakeTimers({ now: Date.now() - 121000, shouldAdvanceTime: true })
 
+  // this fixes flaky tests on GitHub that fail with error of iat being in the future
   await new Promise(resolve => setTimeout(resolve, 100))
 
   // save well-known
@@ -64,15 +64,6 @@ const createWebfinger = async (person: Person, actorUrl: string) => {
         },
       ],
     }),
-  })
-
-  const data = await response.text()
-  // eslint-disable-next-line no-console
-  console.log('response status', response.status, response.ok, data)
-  logger.debug('response status {status} {ok} {data}', {
-    status: response.status,
-    ok: response.ok,
-    data,
   })
 
   expect(response.ok).toBe(true)

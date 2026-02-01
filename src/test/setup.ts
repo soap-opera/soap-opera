@@ -9,7 +9,7 @@ import { AppConfig, createApp } from '../app.js'
 import { createRandomAccount, getRandomPort } from './helpers/index.js'
 import type { Person } from './helpers/types.js'
 
-export const logger = getLogger(['soap-tests', 'setup'])
+const logger = getLogger(['soap-tests', 'setup'])
 
 dotenv.config({ path: '.env.test' })
 const __dirname = dirname(fileURLToPath(import.meta.url))
