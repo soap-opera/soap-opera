@@ -27,10 +27,7 @@ export const setupActor = async (person: Person, app: string) => {
 
   // make sure cached webId oidcIssuers in CSS expire before continuing
   // https://github.com/CommunitySolidServer/access-token-verifier/blob/718f7dde42df358f339e78b836d909f10df099a5/src/config/index.ts#L16
-  vi.useFakeTimers({ now: Date.now() - 121000, shouldAdvanceTime: true })
-
-  // this fixes flaky tests on GitHub that fail with error of iat being in the future
-  await new Promise(resolve => setTimeout(resolve, 100))
+  vi.useFakeTimers({ shouldAdvanceTime: true })
 
   // save well-known
   await createWebfinger(person, actorUrl)
@@ -46,7 +43,7 @@ export const setupActor = async (person: Person, app: string) => {
   // save link from webId to actor
   await saveActorLink(actorUrl, person)
   // save private key
-  vi.useRealTimers()
+  await vi.advanceTimersByTimeAsync(121_000)
 }
 
 const createWebfinger = async (person: Person, actorUrl: string) => {

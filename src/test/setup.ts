@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 import { IncomingMessage, Server, ServerResponse } from 'http'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { afterAll, beforeAll, beforeEach } from 'vitest'
+import { afterAll, beforeAll, beforeEach, vi } from 'vitest'
 import { AppConfig, createApp } from '../app.js'
 import { createRandomAccount, getRandomPort } from './helpers/index.js'
 import type { Person } from './helpers/types.js'
@@ -28,6 +28,10 @@ const testConfig = {
   cssPort: -1,
   cssUrl: '',
 }
+
+beforeEach(() => {
+  vi.useRealTimers()
+})
 
 beforeAll(() => {
   testConfig.cssPort = getRandomPort()
