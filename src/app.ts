@@ -18,6 +18,7 @@ export interface AppConfig {
   isBehindProxy: boolean
   port: number
   baseUrl: string
+  webId?: string
 }
 
 await configureLog()
@@ -27,9 +28,13 @@ export const createApp = async (config: AppConfig) => {
 
   app.proxy = config.isBehindProxy
   const router = new Router()
-
   router
-    .use(solidIdentity('https://example.com', config.baseUrl).routes())
+    .use(
+      solidIdentity(
+        config.webId ?? 'https://example.com',
+        config.baseUrl,
+      ).routes(),
+    )
     .get('/', setupDocs)
     .all('/users/:actor/(.+)', validateOwner)
     .all(

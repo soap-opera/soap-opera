@@ -46,7 +46,6 @@ federation
     const actorDataRaw = await resp.json()
 
     const actorData = actorSchema.parse(actorDataRaw)
-
     return new Person({
       id: new URL(actor),
       preferredUsername: actorData.preferredUsername,
@@ -60,12 +59,13 @@ federation
     })
   })
   .setKeyPairsDispatcher(async ctx => {
+    logger.debug('fetching keypairs')
     fixContext(ctx)
     const owner = ctx.data.owner
     const publicKeyPem = owner.publicKey.publicKeyPem
 
     const authFetch = await getAuthenticatedFetch(
-      owner['soap:isActorOf'],
+      ctx.data.config.webId ?? owner['soap:isActorOf'],
       ctx.data.config.baseUrl,
     )
 
@@ -73,6 +73,11 @@ federation
     const privkeyresp = await authFetch(
       new URL('keys/private.pem', owner['soap:storage']),
     )
+    if (!privkeyresp.ok)
+      logger.debug('fetching {storage}/keys/private.pem: {resp}', {
+        storage: owner['soap:storage'],
+        resp: privkeyresp,
+      })
 
     assert.ok(privkeyresp.ok)
 
@@ -87,6 +92,7 @@ federation
 federation
   .setInboxListeners('/users/{identifier}/inbox')
   .on(Follow, async (ctx, follow) => {
+    logger.debug('Follow')
     fixContext(ctx)
     if (follow.id == null || follow.actorId == null || follow.objectId == null)
       return
@@ -96,7 +102,7 @@ federation
     const follower = await follow.getActor(ctx)
     if (follower === null) return
     const authFetch = await getAuthenticatedFetch(
-      ctx.data.owner['soap:isActorOf'],
+      ctx.data.config.webId ?? ctx.data.owner['soap:isActorOf'],
       ctx.data.config.baseUrl,
     )
     const followersSolid = new URL('followers', ctx.data.owner['soap:storage'])
@@ -108,6 +114,10 @@ federation
     @prefix solid: <http://www.w3.org/ns/solid/terms#>.
     _:patch a solid:InsertDeletePatch;
       solid:inserts { <${follow.actorId}> <${schema_https.follows}> <${follow.objectId}>. } .`,
+    })
+    logger.debug('PATCHing {url}: {response}', {
+      url: followersSolid.href,
+      response,
     })
 
     assert.equal(response.ok, true)
@@ -140,7 +150,7 @@ federation
         throw new Error('This activity does not belong to this person')
       // fetch the local object for comparison
       const authFetch = await getAuthenticatedFetch(
-        ctx.data.owner['soap:isActorOf'],
+        ctx.data.config.webId ?? ctx.data.owner['soap:isActorOf'],
         ctx.data.config.baseUrl,
       )
       const response = await authFetch(id)
@@ -188,7 +198,7 @@ federation
         ctx.data.owner['soap:storage'] + 'followers',
         {
           actor: ctx.data.owner.id,
-          webId: ctx.data.owner['soap:isActorOf'],
+          webId: ctx.data.config.webId ?? ctx.data.owner['soap:isActorOf'],
           issuer: ctx.data.config.baseUrl,
         },
       )
@@ -246,7 +256,7 @@ federation
       ctx.data.owner['soap:storage'] + 'followers',
       {
         actor: ctx.data.owner.id,
-        webId: ctx.data.owner['soap:isActorOf'],
+        webId: ctx.data.config.webId ?? ctx.data.owner['soap:isActorOf'],
         issuer: ctx.data.config.baseUrl,
       },
     )
@@ -272,7 +282,7 @@ federation
         new URL('following', ctx.data.owner['soap:storage']),
         {
           actor: ctx.data.owner.id,
-          webId: ctx.data.owner['soap:isActorOf'],
+          webId: ctx.data.config.webId ?? ctx.data.owner['soap:isActorOf'],
           issuer: ctx.data.config.baseUrl,
         },
       )
@@ -333,7 +343,7 @@ federation
       new URL('following', ctx.data.owner['soap:storage']),
       {
         actor: ctx.data.owner.id,
-        webId: ctx.data.owner['soap:isActorOf'],
+        webId: ctx.data.config.webId ?? ctx.data.owner['soap:isActorOf'],
         issuer: ctx.data.config.baseUrl,
       },
     )
