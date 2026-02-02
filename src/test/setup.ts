@@ -6,6 +6,7 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterAll, beforeAll, beforeEach, vi } from 'vitest'
 import { AppConfig, createApp } from '../app.js'
+import '../utils/log.js'
 import { createRandomAccount, getRandomPort } from './helpers/index.js'
 import type { Person } from './helpers/types.js'
 

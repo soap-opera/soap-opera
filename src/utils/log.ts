@@ -2,7 +2,7 @@ import { configure, getConsoleSink } from '@logtape/logtape'
 import { AsyncLocalStorage } from 'node:async_hooks'
 
 // https://fedify.dev/manual/log#setting-up-logtape
-export const configureLog = async () => {
+const configureLog = async () => {
   await configure({
     sinks: { console: getConsoleSink() },
     loggers: [
@@ -13,3 +13,5 @@ export const configureLog = async () => {
     contextLocalStorage: new AsyncLocalStorage(),
   })
 }
+
+await configureLog()
