@@ -13,17 +13,17 @@
     "save-to-pod": "tsc && node dist/scripts/saveToPod.js"
   },
   "devDependencies": {
-    "@eslint/js": "^9.23.0",
-    "@solid/community-server": "^7.1.6",
-    "css-authn": "^0.3.0",
-    "eslint": "^9.23.0",
-    "eslint-config-prettier": "^10.1.1",
-    "globals": "^16.0.0",
-    "knip": "^5.46.0",
-    "msw": "^2.7.3",
-    "prettier": "^3.5.3",
-    "typescript-eslint": "^8.27.0",
-    "vitest": "^3.0.9"
+    "@eslint/js": "^9.39.2",
+    "@solid/community-server": "^7.1.8",
+    "css-authn": "^0.4.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.3.0",
+    "knip": "^5.82.1",
+    "msw": "^2.12.7",
+    "prettier": "^3.8.1",
+    "typescript-eslint": "^8.54.0",
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@fedify/fedify": "^1.9.1",
