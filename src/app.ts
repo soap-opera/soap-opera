@@ -11,7 +11,7 @@ import { loadConfig } from './middlewares/loadConfig.js'
 import { processActivity as processOutboxActivity } from './middlewares/outbox.js'
 import { setupDocs } from './middlewares/setupDocs.js'
 import { validateOwner } from './middlewares/validateOwner.js'
-import { configureLog } from './utils/log.js'
+import './utils/log.js'
 import { Actor } from './validation/owner.js'
 
 export interface AppConfig {
@@ -20,8 +20,6 @@ export interface AppConfig {
   baseUrl: string
   webId?: string
 }
-
-await configureLog()
 
 export const createApp = async (config: AppConfig) => {
   const app = new Koa()
@@ -36,9 +34,9 @@ export const createApp = async (config: AppConfig) => {
       ).routes(),
     )
     .get('/', setupDocs)
-    .all('/users/:actor/(.+)', validateOwner)
+    .all('/users/:actor/*path', validateOwner)
     .all(
-      '/users/:actor/(.+)',
+      '/users/:actor/*path',
       integrateFederation<ContextData>(federation, (ctx: Context) => ({
         config,
         owner: ctx.state.owner.actor,

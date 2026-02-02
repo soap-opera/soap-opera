@@ -54,7 +54,7 @@ export function integrateFederation<TContextData>(
 }
 
 export function fromKoaRequest(ctx: Context): Request {
-  const url = `${ctx.request.origin}${ctx.request.url}`
+  const url = `${ctx.request.URL.origin}${ctx.request.url}`
   const headers = new Headers()
 
   for (const [key, value] of Object.entries(ctx.request.headers)) {
