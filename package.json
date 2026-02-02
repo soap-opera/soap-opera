@@ -30,7 +30,7 @@
     "@koa/bodyparser": "^6.1.0",
     "@koa/cors": "^5.0.0",
     "@koa/router": "^15.3.0",
-    "@logtape/logtape": "^1.0.4",
+    "@logtape/logtape": "^2.0.2",
     "@soid/koa": "^0.1.2",
     "@solid/access-token-verifier": "^2.1.1",
     "@types/koa": "^3.0.1",

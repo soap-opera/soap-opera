@@ -2423,15 +2423,15 @@
     koa-compose "^4.1.0"
     path-to-regexp "^8.3.0"
 
-"@logtape/logtape@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.npmjs.org/@logtape/logtape/-/logtape-1.0.4.tgz"
-  integrity sha512-YvNVrXIxVpnY528zoiEjX8PqTfr0UCtKXyssvaWL8AE+OByFTCooKuKMdPlm6g65YUI9fPXrHn4UnogSskABnA==
-
 "@logtape/logtape@^1.1.1":
   version "1.1.1"
   resolved "https://registry.npmjs.org/@logtape/logtape/-/logtape-1.1.1.tgz#0cdec2c80f8a56613003a1164a934193021c125c"
   integrity sha512-/zpMuB2BZnL3LnBsy6PfFJp/4qP/60U9hE5j6eFwk25wBVtLpd7/bF3B1j7cnMD37R02fFyDyyHEmRSOz6+Qfg==
+
+"@logtape/logtape@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.npmjs.org/@logtape/logtape/-/logtape-2.0.2.tgz#41057af2ffdb701fc139a3197c7d3f35626bf7ba"
+  integrity sha512-cveUBLbCMFkvkLycP/2vNWvywl47JcJbazHIju94/QNGboZ/jyYAgZIm0ZXezAOx3eIz8OG1EOZ5CuQP3+2FQg==
 
 "@mswjs/interceptors@^0.40.0":
   version "0.40.0"
@@ -4127,7 +4127,7 @@ end-of-stream@^1.1.0, end-of-stream@^1.4.4:
 
 enquirer@^2.4.1:
   version "2.4.1"
-  resolved "https://registry.npmjs.org/enquirer/-/enquirer-2.4.1.tgz"
+  resolved "https://registry.npmjs.org/enquirer/-/enquirer-2.4.1.tgz#93334b3fbd74fc7097b224ab4a8fb7e40bf4ae56"
   integrity sha512-rRqJg/6gd538VHvR3PSrdRBb/1Vy2YfzHqzvbhGIQpDRKIa4FgV/54b5Q1xYSxOOwKvjXweS26E0Q+nAMwp2pQ==
   dependencies:
     ansi-colors "^4.1.1"
