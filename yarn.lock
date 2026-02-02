@@ -4958,10 +4958,10 @@ keyv@^4.5.3, keyv@^4.5.4:
   dependencies:
     json-buffer "3.0.1"
 
-knip@^5.82.1:
-  version "5.82.1"
-  resolved "https://registry.npmjs.org/knip/-/knip-5.82.1.tgz#f92a0e1f74da6d529f1313598c3a4d82fd6eb287"
-  integrity sha512-1nQk+5AcnkqL40kGQXfouzAEXkTR+eSrgo/8m1d0BMei4eAzFwghoXC4gOKbACgBiCof7hE8wkBVDsEvznf85w==
+knip@^5.83.0:
+  version "5.83.0"
+  resolved "https://registry.npmjs.org/knip/-/knip-5.83.0.tgz#803f458c40203e23e6084d3b565141a6cd14146a"
+  integrity sha512-FfmaHMntpZB13B1oJQMSs1hTOZxd0TOn+FYB3oWEI02XlxTW3RH4H7d8z5Us3g0ziHCYyl7z0B1xi8ENP3QEKA==
   dependencies:
     "@nodelib/fs.walk" "^1.2.3"
     fast-glob "^3.3.3"
