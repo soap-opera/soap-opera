@@ -1,4 +1,4 @@
-import { webcrypto } from 'node:crypto'
+import crypto from 'node:crypto'
 
 /**
  * Export node:crypto keys to ascii format
@@ -40,7 +40,7 @@ function pemToArrayBuffer(pem: string) {
 export async function importPrivateKey(pem: string) {
   const keyData = pemToArrayBuffer(pem)
 
-  return await webcrypto.subtle.importKey(
+  return (await crypto.subtle.importKey(
     'pkcs8', // format of the key
     keyData,
     {
@@ -49,7 +49,7 @@ export async function importPrivateKey(pem: string) {
     },
     true, // extractable
     ['sign'], // allowed usages
-  )
+  )) as CryptoKey
 }
 
 interface PublicKeyOptions {
@@ -82,7 +82,7 @@ export async function importPublicKey(
   }
 
   // Import as CryptoKey
-  return await webcrypto.subtle.importKey(
+  return (await crypto.subtle.importKey(
     'spki',
     bytes.buffer,
     {
@@ -91,5 +91,5 @@ export async function importPublicKey(
     },
     true,
     usage,
-  )
+  )) as CryptoKey
 }
