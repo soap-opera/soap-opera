@@ -15,7 +15,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "sourceMap": true,
-    "lib": ["ESNext", "dom"],
+    "lib": ["ESNext"],
     "types": ["node"]
   },
   "include": ["./src"]
