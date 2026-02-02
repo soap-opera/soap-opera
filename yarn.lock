@@ -2824,7 +2824,7 @@
 
 "@soid/koa@^0.1.2":
   version "0.1.2"
-  resolved "https://registry.npmjs.org/@soid/koa/-/koa-0.1.2.tgz"
+  resolved "https://registry.npmjs.org/@soid/koa/-/koa-0.1.2.tgz#b84640dc3a5c6f5fc70f1296199f0fefac744272"
   integrity sha512-CND4QTmRdG+Q+zHWepDIncmLJ3Ph7cLXz0slRKYM6zzCxulsP0B5ivQQHH8FeZhx/Lay+JHP8VN2T0WPDH7rIw==
   dependencies:
     "@soid/core" "^0.1.0"
