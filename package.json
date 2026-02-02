@@ -44,7 +44,6 @@
     "koa": "^3.1.1",
     "koa-helmet": "^9.0.0",
     "n3": "^2.0.1",
-    "postinstall-postinstall": "^2.1.0",
     "rdf-namespaces": "^1.12.0",
     "strict-uri-encode": "^2.0.0",
     "typescript": "^5.9.2",

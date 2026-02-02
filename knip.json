@@ -1,5 +1,4 @@
 {
   "project": ["**/*.{js,ts}"],
-  "entry": ["src/index.ts", "src/scripts/*"],
-  "ignoreDependencies": ["postinstall-postinstall"]
+  "entry": ["src/index.ts", "src/scripts/*"]
 }
