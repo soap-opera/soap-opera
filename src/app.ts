@@ -52,7 +52,7 @@ export const createApp = async (config: AppConfig) => {
     >('/users/:actor/outbox', solidAuth, allowOwner, processOutboxActivity)
 
   app
-    .use(koaHelmet.default())
+    .use(koaHelmet())
     .use(cors())
     .use(
       bodyParser({

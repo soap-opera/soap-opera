@@ -38,8 +38,10 @@ export const processActivity: Middleware<{
         app: ctx.state.config.baseUrl,
       })
 
+      assert(activity.id)
+
       await sendFollow(
-        { ...activityReceived, id: activity.id },
+        { to: [], ...validActivity, id: activity.id.toString() },
         {
           webId: ctx.state.owner.webId,
           app: ctx.state.config.baseUrl,

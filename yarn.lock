@@ -2387,18 +2387,19 @@
   dependencies:
     jsbi "^4.3.0"
 
-"@koa/bodyparser@^5.1.1":
-  version "5.1.1"
-  resolved "https://registry.npmjs.org/@koa/bodyparser/-/bodyparser-5.1.1.tgz"
-  integrity sha512-ZBF49xqNVxnmJ+8iXegq+fXPQm9RSX8giNl/aXS5rW1VpNct92wnFbGR/47vfoRJVLARGQ4HVL4WaQ0u8IJVoA==
+"@koa/bodyparser@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/@koa/bodyparser/-/bodyparser-6.1.0.tgz#8e001da5eedac39ef68ebcefc57f706e9a29423e"
+  integrity sha512-thVG/Utbz9+dB4Nl8EBJKoaOI1DzO74dJqeDFILbAVhUq6C+4rmmrKFwxiDE63ScywOs0CHypx1IUrSRMueFTw==
   dependencies:
-    co-body "^6.1.0"
+    "@types/co-body" "^6.1.3"
+    co-body "^6.2.0"
     lodash.merge "^4.6.2"
-    type-is "^1.6.18"
+    type-is "^2.0.1"
 
 "@koa/cors@^5.0.0":
   version "5.0.0"
-  resolved "https://registry.npmjs.org/@koa/cors/-/cors-5.0.0.tgz"
+  resolved "https://registry.npmjs.org/@koa/cors/-/cors-5.0.0.tgz#0029b5f057fa0d0ae0e37dd2c89ece315a0daffd"
   integrity sha512-x/iUDjcS90W69PryLDIMgFyV21YLTnG9zOpPXS7Bkt2b8AsY3zZsIpOLBkYr9fBcF3HbkKaER5hOBZLfpLgYNw==
   dependencies:
     vary "^1.1.2"
@@ -2991,6 +2992,14 @@
     "@rdfjs/types" ">=1"
     "@types/rdfjs__environment" "*"
 
+"@types/co-body@^6.1.3":
+  version "6.1.3"
+  resolved "https://registry.npmjs.org/@types/co-body/-/co-body-6.1.3.tgz#201796c6389066b400cfcb4e1ec5c3db798265a2"
+  integrity sha512-UhuhrQ5hclX6UJctv5m4Rfp52AfG9o9+d9/HwjxhVB5NjXxr5t9oKgJxN8xRHgr35oo8meUEHUPFWiKg6y71aA==
+  dependencies:
+    "@types/node" "*"
+    "@types/qs" "*"
+
 "@types/connect@*":
   version "3.4.38"
   resolved "https://registry.npmjs.org/@types/connect/-/connect-3.4.38.tgz"
@@ -3158,10 +3167,10 @@
     "@types/koa-compose" "*"
     "@types/node" "*"
 
-"@types/koa__cors@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.npmjs.org/@types/koa__cors/-/koa__cors-5.0.0.tgz"
-  integrity sha512-LCk/n25Obq5qlernGOK/2LUwa/2YJb2lxHUkkvYFDOpLXlVI6tKcdfCHRBQnOY4LwH6el5WOLs6PD/a8Uzau6g==
+"@types/koa__cors@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.npmjs.org/@types/koa__cors/-/koa__cors-5.0.1.tgz#dde631f7ea0a62946fcf4fc97464694835c0aaad"
+  integrity sha512-xZckuh3B6ycSBAIYnBImG1VDHyBNZsltGAuGb4THuZllccdLgD5DUs4RA7TAUjB58THg00SSZ1e//duQef7WRw==
   dependencies:
     "@types/koa" "*"
 
@@ -3821,9 +3830,9 @@ cluster-key-slot@^1.1.0:
   resolved "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-1.1.2.tgz"
   integrity sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==
 
-co-body@^6.1.0:
+co-body@^6.2.0:
   version "6.2.0"
-  resolved "https://registry.npmjs.org/co-body/-/co-body-6.2.0.tgz"
+  resolved "https://registry.npmjs.org/co-body/-/co-body-6.2.0.tgz#afd776d60e5659f4eee862df83499698eb1aea1b"
   integrity sha512-Kbpv2Yd1NdL1V/V4cwLVxraHDV6K8ayohr2rmH0J87Er8+zJjcTa6dAn9QMPC9CRgU8+aNajKbSf1TzDB1yKPA==
   dependencies:
     "@hapi/bourne" "^3.0.0"
@@ -4695,7 +4704,7 @@ headers-polyfill@^4.0.2:
 
 helmet@^8.1.0:
   version "8.1.0"
-  resolved "https://registry.npmjs.org/helmet/-/helmet-8.1.0.tgz"
+  resolved "https://registry.npmjs.org/helmet/-/helmet-8.1.0.tgz#f96d23fedc89e9476ecb5198181009c804b8b38c"
   integrity sha512-jOiHyAZsmnr8LqoPGmCjYAaiuWwjAPLgY8ZX2XrmHawt99/u1y6RgrZMTeoPfpUbV96HOalYgz1qzkRbw54Pmg==
 
 htmlparser2@^8.0.0:
@@ -5087,10 +5096,10 @@ koa-convert@^2.0.0:
     co "^4.6.0"
     koa-compose "^4.1.0"
 
-koa-helmet@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.npmjs.org/koa-helmet/-/koa-helmet-8.0.1.tgz"
-  integrity sha512-lXDqTqNLgqyOKEuCSF3MFReJmEQQ0GD0NzkdSe9dKH87NSMc5GxAA7H5mYaAT+UJypYkIS1lPNRqTuEUgl+l3Q==
+koa-helmet@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.npmjs.org/koa-helmet/-/koa-helmet-9.0.0.tgz#20afbf6f2c68195cd21ecd81d7e3e79c4c4079bb"
+  integrity sha512-RuYf19wAQ8twvWHUF4wF0TmJGl1EpOGkDruAXx1KAJm+GdBmbFjCdR09wr13D0IgxpfpsfCzDibC9542KvYRrg==
 
 koa@^2.15.4:
   version "2.16.0"
@@ -6651,9 +6660,9 @@ type-fest@^5.2.0:
   dependencies:
     tagged-tag "^1.0.0"
 
-type-is@^1.6.16, type-is@^1.6.18:
+type-is@^1.6.16:
   version "1.6.18"
-  resolved "https://registry.npmjs.org/type-is/-/type-is-1.6.18.tgz"
+  resolved "https://registry.npmjs.org/type-is/-/type-is-1.6.18.tgz#4e552cd05df09467dcbc4ef739de89f2cf37c131"
   integrity sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==
   dependencies:
     media-typer "0.3.0"
