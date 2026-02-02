@@ -15,11 +15,7 @@ export const createRandomAccount = async ({
     provider: solidServer,
   })
 
-  const authenticatedFetch = await v7.getAuthenticatedFetch({
-    email: account.email,
-    password: account.password,
-    provider: solidServer,
-  })
+  const authenticatedFetch = await v7.getAuthenticatedFetch(account)
 
   return { ...account, fetch: authenticatedFetch }
 }

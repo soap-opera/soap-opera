@@ -14,7 +14,7 @@ dotenv.config({ path: '.env' })
 
 const { prompt } = enquirer
 
-const provider = process.env.CSS_IDENTITY_PROVIDER ?? ''
+const oidcIssuer = process.env.CSS_IDENTITY_PROVIDER ?? ''
 const email = process.env.CSS_IDENTITY_EMAIL ?? ''
 const password = process.env.CSS_IDENTITY_PASSWORD ?? ''
 
@@ -85,7 +85,7 @@ const password = process.env.CSS_IDENTITY_PASSWORD ?? ''
   // while (addHeader) {}
 
   const authFetch = await v7.getAuthenticatedFetch({
-    provider,
+    oidcIssuer,
     email,
     password,
   })
