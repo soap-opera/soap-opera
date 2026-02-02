@@ -2834,17 +2834,6 @@
   resolved "https://registry.npmjs.org/@solid/access-control-policy/-/access-control-policy-0.1.3.tgz"
   integrity sha512-LTxfN8N5hNBNYfuwJr0nyfxlp2P0+GeK+biCa1FQgIqska3wXpTgYaxjVgsw27mKx4N1FOlaGwG+nXdLnl9ykg==
 
-"@solid/access-token-verifier@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.npmjs.org/@solid/access-token-verifier/-/access-token-verifier-2.1.0.tgz"
-  integrity sha512-79u92GD1SBTxjYghg2ta6cfoBNZ5ljz/9zE6RmXUypTXW7oI18DTWiSrEjWwI4njW+OMh+4ih+sAR6AkI1IFxg==
-  dependencies:
-    jose "^5.1.3"
-    lru-cache "^6.0.0"
-    n3 "^1.17.1"
-    node-fetch "^2.7.0"
-    ts-guards "^0.5.1"
-
 "@solid/access-token-verifier@^2.1.1":
   version "2.1.1"
   resolved "https://registry.npmjs.org/@solid/access-token-verifier/-/access-token-verifier-2.1.1.tgz#1500564ec4bca7f1b7cbd57bcffa55980d4376eb"
@@ -4083,10 +4072,10 @@ domutils@^3.0.1, domutils@^3.1.0:
     domelementtype "^2.3.0"
     domhandler "^5.0.3"
 
-dotenv@^16.4.7:
-  version "16.4.7"
-  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.4.7.tgz"
-  integrity sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==
+dotenv@^17.2.3:
+  version "17.2.3"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-17.2.3.tgz#ad995d6997f639b11065f419a22fabf567cdb9a2"
+  integrity sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==
 
 dunder-proto@^1.0.1:
   version "1.0.1"
@@ -5873,10 +5862,10 @@ rdf-literal@^1.2.0, rdf-literal@^1.3.0, rdf-literal@^1.3.2:
     "@rdfjs/types" "*"
     rdf-data-factory "^1.1.0"
 
-rdf-namespaces@^1.12.0:
-  version "1.12.0"
-  resolved "https://registry.npmjs.org/rdf-namespaces/-/rdf-namespaces-1.12.0.tgz"
-  integrity sha512-Fk48ltssXTmyXeoLqC0y85CEAhhWH+wvu7bkr9WxsKUyFDcKwWSHOK7CvRq3XRampy1qhSrOsIQ8U1gQDCh5MA==
+rdf-namespaces@^1.16.0:
+  version "1.16.0"
+  resolved "https://registry.npmjs.org/rdf-namespaces/-/rdf-namespaces-1.16.0.tgz#a9ba2faf2da03180873073a89f7d81a6f987c4af"
+  integrity sha512-U0V3syFvDjBtf1kDSCZcv+0dLts9hgz52az3S0UCtqRuVqJGfhrrkOqI59jRKp/xr/ewY3ozjg896r0HrEl42Q==
 
 rdf-object@^1.14.0:
   version "1.14.0"
