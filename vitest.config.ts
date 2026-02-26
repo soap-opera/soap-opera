@@ -7,5 +7,6 @@ export default defineConfig({
     disableConsoleIntercept: true,
     printConsoleTrace: true,
     silent: false,
+    exclude: ['**/node_modules/**', '**/.git/**', '**/dist/**'],
   },
 })

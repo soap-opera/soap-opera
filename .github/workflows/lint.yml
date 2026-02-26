@@ -19,16 +19,16 @@ jobs:
           node-version: 22
 
       - name: Install NPM packages
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Check code style
-        run: yarn lint --max-warnings 0
+        run: npm run lint -- --max-warnings 0
 
       - name: Check formatting
-        run: yarn prettier . --check
+        run: npx prettier . --check
 
       - name: Check clutter
-        run: yarn knip
+        run: npm run knip
 
       - name: Check that TypeScript compiles
-        run: yarn tsc
+        run: npx tsc
