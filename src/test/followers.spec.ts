@@ -1,9 +1,9 @@
 import {
   generateCryptoKeyPair,
-  getDocumentLoader,
   signRequest,
   verifyRequest,
 } from '@fedify/fedify'
+import { getDocumentLoader } from '@fedify/vocab-runtime'
 import { DefaultBodyType, HttpResponse, StrictRequest, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { Parser } from 'n3'

@@ -1,14 +1,16 @@
 import {
-  Accept,
-  Activity,
   Context,
   createFederation,
-  CryptographicKey,
-  Follow,
   // importPem,
   MemoryKvStore,
-  Person,
 } from '@fedify/fedify'
+import {
+  Accept,
+  Activity,
+  CryptographicKey,
+  Follow,
+  Person,
+} from '@fedify/vocab'
 import { getLogger } from '@logtape/logtape'
 import { getAuthenticatedFetch } from '@soid/koa'
 import assert from 'node:assert'
@@ -155,7 +157,13 @@ federation
       )
       const response = await authFetch(id)
       assert.ok(response.ok)
-      const storedActivity = await response.json()
+
+      const ActivitySchema = z.object({
+        actor: z.string(),
+        object: z.string(),
+      })
+
+      const storedActivity = ActivitySchema.parse(await response.json())
 
       assert.equal(storedActivity.actor, object.actorId?.toString())
       assert.equal(storedActivity.object, object.objectId?.toString())

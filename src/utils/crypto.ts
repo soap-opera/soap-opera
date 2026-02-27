@@ -55,7 +55,7 @@ export async function importPrivateKey(pem: string) {
 interface PublicKeyOptions {
   algorithm?: string
   hash?: string
-  usage?: KeyUsage[]
+  usage?: crypto.webcrypto.KeyUsage[]
 }
 
 export async function importPublicKey(

@@ -1,9 +1,11 @@
-import { Create, Follow, Note, signRequest } from '@fedify/fedify'
+import { signRequest } from '@fedify/fedify'
+import { Create, Follow, Note } from '@fedify/vocab'
 import { getAuthenticatedFetch } from '@soid/koa'
 import type { Middleware } from 'koa'
 import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 import encodeURIComponent from 'strict-uri-encode'
+import z from 'zod'
 import { AppConfig } from '../app.js'
 import { importPrivateKey } from '../utils/crypto.js'
 import {
@@ -178,7 +180,11 @@ const sendFollow = async (
     headers: { accept: 'application/activity+json' },
   })
   assert.ok(toResponse.ok)
-  const toActor = await toResponse.json()
+
+  const ActorSchema = z.object({ inbox: z.string() })
+
+  const toActor = ActorSchema.parse(await toResponse.json())
+
   const inbox = toActor.inbox
 
   const acceptActivity = await new Follow({
