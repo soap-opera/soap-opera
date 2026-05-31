@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'vitest'
+
 import { getLogger } from '@logtape/logtape'
 import * as css from '@solid/community-server'
 import * as dotenv from 'dotenv'

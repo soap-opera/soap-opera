@@ -5,13 +5,13 @@ import { setupServer } from 'msw/node'
 import assert from 'node:assert/strict'
 import encodeURIComponent from 'strict-uri-encode'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
-import { sendSignedFollowRequest } from './followers.spec.js'
 import { generateFakeActor } from './helpers/fakeActor.js'
+import { sendSignedFollowRequest } from './helpers/follow.js'
 import { setupActor } from './helpers/pod.js'
 import { appConfig, person, person2 } from './setup.js'
 
 const fakeActors = await Promise.all(
-  ['https://example.local/actor', 'https://fake.local/users/alice'].map(actor =>
+  ['https://example.org/actor', 'https://example.com/users/alice'].map(actor =>
     generateFakeActor(actor),
   ),
 )

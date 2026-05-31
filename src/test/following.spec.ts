@@ -11,8 +11,8 @@ import { setupActor } from './helpers/pod.js'
 import { Person } from './helpers/types.js'
 import { appConfig, person, person2 } from './setup.js'
 
-const factor1 = await generateFakeActor('http://fake.local/actor')
-const factor2 = await generateFakeActor('http://fake.example/profile/actor')
+const factor1 = await generateFakeActor('http://example.org/actor')
+const factor2 = await generateFakeActor('http://example.com/profile/actor')
 
 const server = setupServer()
 let capturedRequest: StrictRequest<DefaultBodyType> | undefined = undefined

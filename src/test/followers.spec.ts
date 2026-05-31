@@ -1,14 +1,10 @@
-import {
-  generateCryptoKeyPair,
-  signRequest,
-  verifyRequest,
-} from '@fedify/fedify'
+import { generateCryptoKeyPair, verifyRequest } from '@fedify/fedify'
 import { getDocumentLoader } from '@fedify/vocab-runtime'
+import { getLogger } from '@logtape/logtape'
 import { DefaultBodyType, HttpResponse, StrictRequest, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { Parser } from 'n3'
 import assert from 'node:assert/strict'
-import { randomUUID } from 'node:crypto'
 import { schema_https } from 'rdf-namespaces'
 import encodeURIComponent from 'strict-uri-encode'
 import {
@@ -23,36 +19,24 @@ import {
 import { soapPrefix } from '../config/constants.js'
 import { cryptoKeyToPem } from '../utils/crypto.js'
 import { generateFakeActor } from './helpers/fakeActor.js'
+import {
+  createSignedFollowRequest,
+  getActivity,
+  sendSignedFollowRequest,
+} from './helpers/follow.js'
 import { removeActorLink, setupActor } from './helpers/pod.js'
 import { appConfig, person } from './setup.js'
 
-const ownerWebId = 'https://solidpod.local/profile/card#me'
+const logger = getLogger(['soap-tests', 'followers.spec'])
+
+const ownerWebId = new URL('https://example.com/solidpod/profile/card#me')
 const podStorage = new URL('/activitypub/', ownerWebId).toString()
-const ownerActor = 'https://example.localhost/profile/actor'
+const ownerActor = 'https://example.net/profile/actor'
 
 const fakeActors = [
-  await generateFakeActor('https://example.local/actor'),
-  await generateFakeActor('https://fake.local/users/test/actor'),
+  await generateFakeActor('https://example.org/actor'),
+  await generateFakeActor('https://example.com/users/test/actor'),
 ] as const
-
-type FakeActor = (typeof fakeActors)[number]
-
-const getActivity = ({
-  actor,
-  object,
-  type = 'Follow',
-}: {
-  actor: string
-  object: string
-  type?: string
-}) => ({
-  '@context': 'https://www.w3.org/ns/activitystreams',
-  // id: new URL('activity/' + , actor).toString(),
-  id: new URL('activity/' + randomUUID(), actor).toString(),
-  type,
-  actor,
-  object,
-})
 
 const keys = await generateCryptoKeyPair()
 
@@ -62,6 +46,7 @@ server.use(
   ...[
     ...fakeActors.flatMap(actor => [
       http.get(actor.profile.id, async () => {
+        logger.debug('Fetching fake actor via MSW ' + actor.profile.id)
         return HttpResponse.json(actor.profile)
       }),
       http.post(actor.profile.inbox.toString(), async ({ request }) => {
@@ -70,6 +55,7 @@ server.use(
       }),
     ]),
     http.get(ownerActor, async () => {
+      logger.debug('Fetching fake actor via MSW ' + ownerActor)
       const baseUrl = new URL(
         `users/${encodeURIComponent(ownerActor)}/`,
         appConfig.baseUrl,
@@ -88,7 +74,7 @@ server.use(
         },
       })
     }),
-    http.get(new URL('/profile/card', ownerWebId).toString(), () => {
+    http.get(new URL(ownerWebId.pathname, ownerWebId).toString(), () => {
       return HttpResponse.text(
         `<#me> <${soapPrefix}hasActor> <${ownerActor}>.`,
         {
@@ -151,7 +137,7 @@ describe('Followers', () => {
       const signedRequest = await createSignedFollowRequest(
         fakeActors[0],
         ownerActor,
-        { activity: { actor: 'https://other.local/actor' } },
+        { activity: { actor: 'https://example.org/other/actor' } },
       )
 
       const response = await fetch(signedRequest)
@@ -308,8 +294,9 @@ describe('Followers', () => {
       await setupActor(person, appConfig.baseUrl)
       assert.ok(person.actor)
 
-      for (const fakeActor of fakeActors)
+      for (const fakeActor of fakeActors) {
         await sendSignedFollowRequest(fakeActor, person.actor.id)
+      }
 
       const response = await fetch(person.actor.followers, {
         headers: { accept: 'application/activity+json' },
@@ -334,48 +321,10 @@ describe('Followers', () => {
       // expect(collectionPage1.totalItems).toEqual(2)
       expect(collectionPage1.id).toEqual(collection.first)
       expect(collectionPage1.partOf).toEqual(collection.id)
+
       fakeActors.forEach(actor => {
         expect(collectionPage1.orderedItems).toContain(actor.profile.id)
       })
     })
   })
 })
-
-const createSignedFollowRequest = async (
-  actor: FakeActor,
-  object: string,
-  overwrite?: {
-    activity?: { actor?: string; object?: string; type?: string }
-  },
-) => {
-  // send the activity to a solid pod
-  const request = new Request(
-    new URL(`/users/${encodeURIComponent(object)}/inbox`, appConfig.baseUrl),
-    {
-      method: 'POST',
-      headers: { 'content-type': 'application/activity+json' },
-      body: JSON.stringify(
-        getActivity({
-          actor: overwrite?.activity?.actor ?? actor.profile.id,
-          object: overwrite?.activity?.object ?? object,
-          type: overwrite?.activity?.type,
-        }),
-      ),
-    },
-  )
-
-  const signedRequest = await signRequest(
-    request,
-    actor.keys.privateKey,
-    new URL(actor.profile.publicKey.id),
-  )
-
-  return signedRequest
-}
-
-export const sendSignedFollowRequest = async (
-  ...options: Parameters<typeof createSignedFollowRequest>
-) => {
-  const signedRequest = await createSignedFollowRequest(...options)
-  return await fetch(signedRequest)
-}
