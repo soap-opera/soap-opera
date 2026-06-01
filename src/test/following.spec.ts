@@ -114,7 +114,7 @@ describe('Following', () => {
       })
 
       expect(response.ok).toBe(false)
-      expect(response.status).toBe(403)
+      expect(response.status).toBe(401)
     })
 
     it('should send a Follow activity to the inbox of the other person', async () => {

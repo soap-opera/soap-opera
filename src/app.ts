@@ -42,6 +42,11 @@ export const createApp = async (config: AppConfig) => {
         owner: ctx.state.owner.actor,
       })),
     )
+    /**
+     * This is not reached anymore
+     * Legacy outbox implementation
+     * TODO remove
+     */
     .post<
       {
         user: { webId: string }
@@ -49,7 +54,15 @@ export const createApp = async (config: AppConfig) => {
         config: AppConfig
       },
       { params: { actor: string } }
-    >('/users/:actor/outbox', solidAuth, allowOwner, processOutboxActivity)
+    >(
+      '/users/:actor/outbox',
+      ctx => {
+        ctx.throw(500, 'Legacy outbox implementation should not be reached.')
+      },
+      solidAuth,
+      allowOwner,
+      processOutboxActivity,
+    )
 
   app
     .use(koaHelmet())

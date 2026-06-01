@@ -3,10 +3,12 @@ import {
   createFederation,
   // importPem,
   MemoryKvStore,
+  OutboxContext,
 } from '@fedify/fedify'
 import {
   Accept,
   Activity,
+  Create,
   CryptographicKey,
   Follow,
   Person,
@@ -14,11 +16,13 @@ import {
 import { getLogger } from '@logtape/logtape'
 import { getAuthenticatedFetch } from '@soid/koa'
 import assert from 'node:assert'
+import { randomUUID } from 'node:crypto'
 import { schema_https } from 'rdf-namespaces'
 import { z } from 'zod'
 import type { AppConfig } from '../app.js'
 import { readFollowersData } from '../data/followers.js'
 import { readFollowingData } from '../data/following.js'
+import { getSolidAuth } from '../utils/auth.js'
 import { importPrivateKey, importPublicKey } from '../utils/crypto.js'
 import { Actor, actorSchema } from '../validation/owner.js'
 
@@ -27,10 +31,14 @@ const logger = getLogger(['soap-opera', 'federation'])
 export interface ContextData {
   owner: Actor
   config: AppConfig
+  response?: { location?: string; status?: number }
 }
 
 export const federation = createFederation<ContextData>({
   kv: new MemoryKvStore(),
+  allowPrivateAddress: new Set(['test', 'vitest']).has(
+    process.env.NODE_ENV ?? '',
+  ),
 })
 
 export function fixContext(ctx: Context<{ owner: Actor }>) {
@@ -368,6 +376,124 @@ federation.setObjectDispatcher(
     return null
   },
 )
+
+federation
+  .setOutboxListeners('/users/{identifier}/outbox')
+  .authorize(async ctx => {
+    fixContext(ctx)
+    try {
+      const { webId /*, clientId*/ } = await getSolidAuth(ctx.request)
+      return ctx.data.owner['soap:isActorOf'] === webId
+    } catch {
+      return false
+    }
+  })
+  .on(Create, async (ctx: OutboxContext<ContextData>, create) => {
+    fixContext(ctx)
+
+    const thingId = Date.now() + '__' + randomUUID()
+
+    const webId = ctx.data.owner['soap:isActorOf']
+    const actorUri = ctx.data.owner.id
+    const baseUrl = ctx.data.config.baseUrl
+    const authFetch = await getAuthenticatedFetch(webId, baseUrl)
+
+    const object = await create.getObject()
+    assert.ok(object)
+    const data = await object?.toJsonLd()
+
+    const result = await authFetch(
+      new URL(`things/${thingId}`, ctx.data.owner['soap:storage']),
+      {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: { 'content-type': 'application/ld+json' },
+      },
+    )
+    assert(result.ok)
+
+    // deliver activity
+
+    const id = new URL(
+      `users/${encodeURIComponent(ctx.data.owner.id)}/things/${thingId}`,
+      baseUrl,
+    )
+
+    const finalObject = object.clone({ id })
+    const finalActivity = new Create({
+      actor: new URL(actorUri),
+      object: finalObject,
+      tos: create.toIds,
+      ccs: create.ccIds,
+    })
+
+    const followersUri = ctx.data.owner.followers
+
+    for (const receivers of [
+      create.toIds,
+      create.btoIds,
+      create.ccIds,
+      create.bccIds,
+    ]) {
+      for (const receiver of receivers) {
+        if (receiver.toString() === followersUri) {
+          await ctx.sendActivity(
+            { identifier: actorUri },
+            'followers',
+            finalActivity,
+          )
+        } else if (
+          receiver.toString() === 'https://www.w3.org/ns/activitystreams#Public'
+        ) {
+          logger.debug('TODO handle public')
+        } else {
+          logger.debug('TODO handle actor ' + receiver.toString())
+        }
+      }
+    }
+
+    // await ctx.sendActivity({ identifier: actorUri }, [], finalActivity)
+
+    ctx.data.response = { location: id.toString(), status: 201 }
+  })
+  .on(Follow, async (ctx, follow) => {
+    fixContext(ctx)
+
+    const webId = ctx.data.owner['soap:isActorOf']
+    const actorUri = ctx.data.owner.id
+    const baseUrl = ctx.data.config.baseUrl
+    const authFetch = await getAuthenticatedFetch(webId, baseUrl)
+
+    const storage = ctx.data.owner['soap:storage']
+
+    // remember temporary follow activity until we get Accept
+    const uri = new URL(`activities/${randomUUID()}`, storage)
+
+    assert.ok(follow.objectId)
+
+    const activity = new Follow({
+      id: uri,
+      actor: new URL(actorUri),
+      object: follow.objectId,
+      tos: [follow.objectId],
+    })
+
+    const saveTemporaryFollowResponse = await authFetch(uri, {
+      method: 'PUT',
+      body: JSON.stringify(await activity.toJsonLd()),
+      headers: { 'content-type': 'application/activity+json' },
+    })
+
+    assert.ok(saveTemporaryFollowResponse.ok)
+
+    const followedActor = await ctx.lookupObject(follow.objectId)
+
+    assert.ok(followedActor instanceof Person)
+
+    await ctx.sendActivity({ identifier: actorUri }, [followedActor], activity)
+
+    ctx.data.response = { status: 201 }
+  })
 
 function paginateArray<T>(items: T[], page: number, pageSize: number): T[] {
   const startIndex = (page - 1) * pageSize
