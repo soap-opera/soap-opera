@@ -41,7 +41,7 @@ export const federation = createFederation<ContextData>({
   ),
 })
 
-export function fixContext(ctx: Context<{ owner: Actor }>) {
+function fixContext(ctx: Context<{ owner: Actor }>) {
   ctx.getActorUri = function (identifier: string) {
     return new URL(identifier)
   }

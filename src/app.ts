@@ -4,15 +4,12 @@ import Router from '@koa/router'
 import { solidIdentity } from '@soid/koa'
 import Koa, { Context } from 'koa'
 import koaHelmet from 'koa-helmet'
-import { allowOwner, solidAuth } from './middlewares/auth.js'
 import { ContextData, federation } from './middlewares/federation.js'
 import { integrateFederation } from './middlewares/fedify-koa-integration.js'
 import { loadConfig } from './middlewares/loadConfig.js'
-import { processActivity as processOutboxActivity } from './middlewares/outbox.js'
 import { setupDocs } from './middlewares/setupDocs.js'
 import { validateOwner } from './middlewares/validateOwner.js'
 import './utils/log.js'
-import { Actor } from './validation/owner.js'
 
 export interface AppConfig {
   isBehindProxy: boolean
@@ -41,27 +38,6 @@ export const createApp = async (config: AppConfig) => {
         config,
         owner: ctx.state.owner.actor,
       })),
-    )
-    /**
-     * This is not reached anymore
-     * Legacy outbox implementation
-     * TODO remove
-     */
-    .post<
-      {
-        user: { webId: string }
-        owner: { webId: string; actor: Actor }
-        config: AppConfig
-      },
-      { params: { actor: string } }
-    >(
-      '/users/:actor/outbox',
-      ctx => {
-        ctx.throw(500, 'Legacy outbox implementation should not be reached.')
-      },
-      solidAuth,
-      allowOwner,
-      processOutboxActivity,
     )
 
   app

@@ -55,7 +55,7 @@ export function integrateFederation<
   }
 }
 
-export function fromKoaRequest(ctx: Context): Request {
+function fromKoaRequest(ctx: Context): Request {
   const url = `${ctx.request.URL.origin}${ctx.request.url}`
   const headers = new Headers()
 
