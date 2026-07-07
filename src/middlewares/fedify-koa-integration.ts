@@ -9,7 +9,9 @@ type ContextDataFactory<TContextData> = (
   ctx: Context,
 ) => TContextData | Promise<TContextData>
 
-export function integrateFederation<TContextData>(
+export function integrateFederation<
+  TContextData extends { response?: { status?: number; location?: string } },
+>(
   federation: Federation<TContextData>,
   contextDataFactory: ContextDataFactory<TContextData>,
 ): (ctx: Context, next: Next) => Promise<void> {
@@ -49,11 +51,11 @@ export function integrateFederation<TContextData>(
     if (notFound) return
     if (notAcceptable && ctx.response.body != null) return
 
-    await setKoaResponse(ctx, response)
+    await setKoaResponse(ctx, response, resolvedContextData.response)
   }
 }
 
-export function fromKoaRequest(ctx: Context): Request {
+function fromKoaRequest(ctx: Context): Request {
   const url = `${ctx.request.URL.origin}${ctx.request.url}`
   const headers = new Headers()
 
@@ -100,12 +102,20 @@ export function fromKoaRequest(ctx: Context): Request {
   return new Request(url, requestInit)
 }
 
-async function setKoaResponse(ctx: Context, response: Response): Promise<void> {
-  ctx.response.status = response.status
+async function setKoaResponse(
+  ctx: Context,
+  response: Response,
+  responseData?: { status?: number; location?: string },
+): Promise<void> {
+  ctx.response.status = responseData?.status ?? response.status
 
   response.headers.forEach((value, key) => {
     ctx.response.set(key, value)
   })
+
+  if (responseData?.location) {
+    ctx.response.set('location', responseData.location)
+  }
 
   if (response.body == null) {
     ctx.response.body = null

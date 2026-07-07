@@ -54,12 +54,16 @@ describe('ActivityPub Basic Post Creation', () => {
         headers: { 'content-type': 'application/activity+json' },
         body: JSON.stringify({
           '@context': 'https://www.w3.org/ns/activitystreams',
-          type: 'Note',
-          published: new Date().toISOString().split('.')[0] + 'Z',
-          attributedTo: person.actor.id,
+          type: 'Create',
+          actor: person.actor.id,
+          object: {
+            type: 'Note',
+            published: new Date().toISOString().split('.')[0] + 'Z',
+            attributedTo: person.actor.id,
+            content: 'This is a test note!',
+          },
           to: ['https://www.w3.org/ns/activitystreams#Public'],
           cc: [person.actor.followers],
-          content: 'This is a test note!',
         }),
       })
 
@@ -71,18 +75,22 @@ describe('ActivityPub Basic Post Creation', () => {
       await setupActor(person, appConfig.baseUrl)
       assert.ok(person.actor)
 
-      // send authenticated Create Note activity to the outbox
+      // send unauthenticated Create Note activity to the outbox
       const response = await fetch(person.actor.outbox, {
         method: 'POST',
         headers: { 'content-type': 'application/activity+json' },
         body: JSON.stringify({
           '@context': 'https://www.w3.org/ns/activitystreams',
-          type: 'Note',
-          published: new Date().toISOString().split('.')[0] + 'Z',
-          attributedTo: person.actor.id,
+          type: 'Create',
+          actor: person.actor.id,
+          object: {
+            type: 'Note',
+            published: new Date().toISOString().split('.')[0] + 'Z',
+            attributedTo: person.actor.id,
+            content: 'This is a test note!',
+          },
           to: ['https://www.w3.org/ns/activitystreams#Public'],
           cc: [person.actor.followers],
-          content: 'This is a test note!',
         }),
       })
 
@@ -112,7 +120,7 @@ describe('ActivityPub Basic Post Creation', () => {
       })
 
       expect(response.ok).toBe(false)
-      expect(response.status).toBe(403)
+      expect(response.status).toBe(401)
     })
   })
 
@@ -127,12 +135,16 @@ describe('ActivityPub Basic Post Creation', () => {
         headers: { 'content-type': 'application/activity+json' },
         body: JSON.stringify({
           '@context': 'https://www.w3.org/ns/activitystreams',
-          type: 'Note',
-          published: new Date().toISOString().split('.')[0] + 'Z',
-          attributedTo: person.actor.id,
+          type: 'Create',
+          actor: person.actor.id,
+          object: {
+            type: 'Note',
+            published: new Date().toISOString().split('.')[0] + 'Z',
+            attributedTo: person.actor.id,
+            content: 'This is a test note!',
+          },
           to: ['https://www.w3.org/ns/activitystreams#Public'],
           cc: [person.actor.followers],
-          content: 'This is a test note!',
         }),
       })
 
@@ -217,12 +229,16 @@ describe('ActivityPub Basic Post Creation', () => {
         headers: { 'content-type': 'application/activity+json' },
         body: JSON.stringify({
           '@context': 'https://www.w3.org/ns/activitystreams',
-          type: 'Note',
-          published: new Date().toISOString().split('.')[0] + 'Z',
-          attributedTo: person.actor.id,
+          type: 'Create',
+          actor: person.actor.id,
+          object: {
+            type: 'Note',
+            content: 'This is a test note!',
+            published: new Date().toISOString().split('.')[0] + 'Z',
+            attributedTo: person.actor.id,
+          },
           to: ['https://www.w3.org/ns/activitystreams#Public'],
           cc: [person.actor.followers],
-          content: 'This is a test note!',
         }),
       })
 

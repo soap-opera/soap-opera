@@ -4,15 +4,12 @@ import Router from '@koa/router'
 import { solidIdentity } from '@soid/koa'
 import Koa, { Context } from 'koa'
 import koaHelmet from 'koa-helmet'
-import { allowOwner, solidAuth } from './middlewares/auth.js'
 import { ContextData, federation } from './middlewares/federation.js'
 import { integrateFederation } from './middlewares/fedify-koa-integration.js'
 import { loadConfig } from './middlewares/loadConfig.js'
-import { processActivity as processOutboxActivity } from './middlewares/outbox.js'
 import { setupDocs } from './middlewares/setupDocs.js'
 import { validateOwner } from './middlewares/validateOwner.js'
 import './utils/log.js'
-import { Actor } from './validation/owner.js'
 
 export interface AppConfig {
   isBehindProxy: boolean
@@ -42,14 +39,6 @@ export const createApp = async (config: AppConfig) => {
         owner: ctx.state.owner.actor,
       })),
     )
-    .post<
-      {
-        user: { webId: string }
-        owner: { webId: string; actor: Actor }
-        config: AppConfig
-      },
-      { params: { actor: string } }
-    >('/users/:actor/outbox', solidAuth, allowOwner, processOutboxActivity)
 
   app
     .use(koaHelmet())
