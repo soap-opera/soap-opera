@@ -3,5 +3,6 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
-  }
+  },
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }
