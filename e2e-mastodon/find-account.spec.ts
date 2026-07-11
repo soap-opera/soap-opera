@@ -8,7 +8,12 @@ import {
   type MastodonAccount,
 } from './helpers/mastodon.js'
 import { setupSoapOpera } from './helpers/soap-opera.js'
-import { createSolidAccount, SolidAccount } from './helpers/solid.js'
+import {
+  createSolidAccount,
+  getSolidAccount,
+  SolidAccount,
+} from './helpers/solid.js'
+import { resetSolidAccount } from './helpers/solid/resetSolidAccount.js'
 
 setGlobalDispatcher(new Agent({ connect: { rejectUnauthorized: false } }))
 
@@ -17,7 +22,27 @@ test.describe('Soap Opera accounts on Mastodon', () => {
   let solidAccount: SolidAccount
 
   test.beforeEach(async ({ page }) => {
-    solidAccount = await createSolidAccount({ username: 'anna' })
+    try {
+      solidAccount = await createSolidAccount({ username: 'anna' })
+    } catch {
+      solidAccount = await getSolidAccount({ username: 'anna' })
+      await resetSolidAccount(solidAccount)
+    }
+    console.log(await (await fetch(solidAccount.webId)).text())
+    console.log(
+      await (await solidAccount.fetch(`${solidAccount.podUrl}.acl`)).text(),
+    )
+    console.log(
+      await (
+        await solidAccount.fetch(`${solidAccount.podUrl}profile/.acl`)
+      ).text(),
+    )
+    console.log(
+      await (
+        await solidAccount.fetch(`${solidAccount.podUrl}profile/card.acl`)
+      ).text(),
+    )
+
     await setupSoapOpera(solidAccount)
 
     await ensureMastodonSignup(page)

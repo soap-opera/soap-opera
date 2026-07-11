@@ -78,7 +78,7 @@ export default defineConfig({
     // Mastodon
     // {
     //   command: 'echo "Please run mastodon"',
-    //   url: 'https://mastodon.test',
+    //   url: 'http://localhost:3000',
     //   reuseExistingServer: true,
     // },
     // Soap-Opera
