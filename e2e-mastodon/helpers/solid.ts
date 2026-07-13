@@ -1,5 +1,4 @@
 import { v7 } from 'css-authn'
-import { generate } from 'random-words'
 
 export interface SolidAccount extends Awaited<
   ReturnType<typeof v7.createAccount>
@@ -7,10 +6,10 @@ export interface SolidAccount extends Awaited<
   fetch: typeof globalThis.fetch
 }
 
-export const createRandomSolidAccount = async (): Promise<SolidAccount> => {
-  const username = generate({ exactly: 3, join: '' })
-  return await createSolidAccount({ username })
-}
+// export const createRandomSolidAccount = async (): Promise<SolidAccount> => {
+//   const username = generate({ exactly: 3, join: '' })
+//   return await createSolidAccount({ username })
+// }
 
 const password = 'correcthorsebatterystaples'
 

@@ -15,14 +15,14 @@ services:
       BIND: 0.0.0.0
       BOOTSNAP_CACHE_DIR: /tmp
       REDIS_HOST: localhost
-      REDIS_PORT: "6379"
+      REDIS_PORT: '6379'
       DB_HOST: localhost
       DB_USER: postgres
       DB_PASS: postgres
-      DB_PORT: "5432"
-      ES_ENABLED: "true"
+      DB_PORT: '5432'
+      ES_ENABLED: 'true'
       ES_HOST: localhost
-      ES_PORT: "9200"
+      ES_PORT: '9200'
       LIBRE_TRANSLATE_ENDPOINT: http://localhost:5000
       LOCAL_DOMAIN: ${LOCAL_DOMAIN:-localhost:3000}
       VITE_DEV_SERVER_PUBLIC: ${VITE_DEV_SERVER_PUBLIC:-localhost:3036}
@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
     ports:
       - 5432:5432
-    command: ["postgres", "-c", "listen_addresses=*"]
+    command: ['postgres', '-c', 'listen_addresses=*']
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -66,7 +66,7 @@ services:
       ES_JAVA_OPTS: -Xms512m -Xmx512m
       cluster.name: es-mastodon
       discovery.type: single-node
-      bootstrap.memory_lock: "true"
+      bootstrap.memory_lock: 'true'
     volumes:
       - es-data:/usr/share/elasticsearch/data
     networks:

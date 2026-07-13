@@ -3,8 +3,6 @@ import { expect } from '@playwright/test'
 import { SolidAccount } from './solid.js'
 
 export async function setupSoapOpera(account: SolidAccount) {
-  console.log(account)
-
   const actorUrl = new URL('/profile/actor', account.podUrl)
   const webfingerUrl = new URL('/.well-known/webfinger', account.podUrl)
 
@@ -23,7 +21,6 @@ export async function setupSoapOpera(account: SolidAccount) {
       ],
     }),
   })
-  console.log(await webfingerResponse.text())
   expect(webfingerResponse.ok).toBe(true)
 
   const webfingerAclResponse = await account.fetch(
@@ -47,10 +44,7 @@ export async function setupSoapOpera(account: SolidAccount) {
       `,
     },
   )
-  console.log(webfingerAclResponse.text)
   expect(webfingerAclResponse.ok).toBe(true)
-
-  console.log(account, '*****')
 
   const keys = await generateMastodonKeys()
   const soapStorage = new URL('soap-opera/', account.podUrl)

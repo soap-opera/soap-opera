@@ -11,9 +11,9 @@ import { setupSoapOpera } from './helpers/soap-opera.js'
 import {
   createSolidAccount,
   getSolidAccount,
+  resetSolidAccount,
   SolidAccount,
 } from './helpers/solid.js'
-import { resetSolidAccount } from './helpers/solid/resetSolidAccount.js'
 
 setGlobalDispatcher(new Agent({ connect: { rejectUnauthorized: false } }))
 
@@ -28,35 +28,17 @@ test.describe('Soap Opera accounts on Mastodon', () => {
       solidAccount = await getSolidAccount({ username: 'anna' })
       await resetSolidAccount(solidAccount)
     }
-    console.log(await (await fetch(solidAccount.webId)).text())
-    console.log(
-      await (await solidAccount.fetch(`${solidAccount.podUrl}.acl`)).text(),
-    )
-    console.log(
-      await (
-        await solidAccount.fetch(`${solidAccount.podUrl}profile/.acl`)
-      ).text(),
-    )
-    console.log(
-      await (
-        await solidAccount.fetch(`${solidAccount.podUrl}profile/card.acl`)
-      ).text(),
-    )
 
     await setupSoapOpera(solidAccount)
 
     await ensureMastodonSignup(page)
-    console.log('ENSURED SIGNUP')
     mastodonAccount = await createRandomMastodonAccount(page)
-    console.log('CREATED RANDOM ACCOUNT')
     await mastodonSignOut(page)
-    console.log('SIGNED OUT')
   })
 
   test('should be able to find Soap Opera account via Mastodon search', async ({
     page,
   }) => {
-    console.log('STARTING A TEST')
     await mastodonSignIn(page, mastodonAccount)
     await page
       .getByRole('textbox', { name: 'Search or paste URL' })

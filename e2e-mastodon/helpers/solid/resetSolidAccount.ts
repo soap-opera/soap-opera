@@ -7,7 +7,6 @@ import type { SolidAccount } from '../solid.js'
  * Reset changes to Solid Pod
  */
 export const resetSolidAccount = async (account: SolidAccount) => {
-  console.log('(*********************************************')
   const w = new URL(account.webId)
   w.hash = ''
 
@@ -83,31 +82,25 @@ export const resetSolidAccount = async (account: SolidAccount) => {
     // leaf resources will be updated to original or deleted
     // expected resources will be overwritten
     if (url in expected) {
-      console.log('OVERWRITING RESOURCE', url)
       const result = await account.fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'text/turtle' },
         body: expected[url],
       })
-      console.log(result.ok, result.status)
       assert(result.ok)
 
       return true
     } else {
-      console.log('DELETING RESOURCE', url)
       const result = await account.fetch(url, { method: 'DELETE' })
-      console.log(result.ok, result.status, await result.text())
       assert(result.ok || (allowNotFound && result.status === 404))
       return false
     }
   }
 
   const resetRecursive = async (url: string): Promise<boolean> => {
-    console.log('RECURSIVELY RESETTING', url)
     const { namedNode } = n3.DataFactory
     await resetResource(url + '.acl', true)
     if (url.endsWith('/')) {
-      console.log('PROCESSING CONTAINER', url)
       // get what's inside container
       const response = await account.fetch(url, {
         headers: { Accept: 'text/turtle' },
@@ -122,8 +115,6 @@ export const resetSolidAccount = async (account: SolidAccount) => {
         namedNode(ldp.contains),
         null,
       )
-
-      console.log(containment)
 
       let keep = false
       for (const input of containment) {
