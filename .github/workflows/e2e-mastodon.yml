@@ -1,0 +1,74 @@
+name: Mastodon Interoperability Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: soap-opera
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: 'soap-opera'
+
+      # set up domains
+      - run: cat ./e2e-mastodon/etc-hosts | sudo tee -a /etc/hosts
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y libnss3-tools mkcert
+          mkcert -install
+          mkcert -CAROOT
+      - run: sudo apt-get update
+      - run: sudo apt-get install caddy
+      - run: sudo ls -lar /etc/caddy/
+      - run: sudo cat /etc/caddy/Caddyfile
+      - run: cat ./e2e-mastodon/caddy-soap-opera.conf | sudo tee -a /etc/caddy/Caddyfile
+      - run: sudo cat /etc/caddy/Caddyfile
+      - run: sudo mkdir /etc/caddy/certs/
+      - run: mkcert mastodon.test soap.test solid.test "*.solid.test"
+      - run: sudo mv mastodon.test*.pem /etc/caddy/certs/
+      - run: sudo ls -la /etc/caddy/certs/
+      - run: sudo chown root:root /etc/caddy/certs/*.pem
+      - run: sudo chmod 777 /etc/caddy/certs/*.pem
+      - run: sudo service caddy status
+      - run: caddy validate --config /etc/caddy/Caddyfile
+      - run: sudo service caddy restart || echo "Restart failed"
+      - run: sudo journalctl -u caddy.service -n 50 --no-pager
+      - run: sudo service caddy status
+      - run: curl -v "https://solid.test"
+      - run: curl -v "https://soap.test"
+
+      # set up mastodon
+      - uses: actions/checkout@v4
+        with:
+          path: mastodon
+          repository: mastodon/mastodon
+          ref: v4.6.3
+      - run: cp ./e2e-mastodon/mastodon-dev-compose.yaml ../mastodon/.devcontainer/compose.yaml
+      - run: docker compose -f .devcontainer/compose.yaml up -d
+        working-directory: mastodon
+      - run: docker compose -f .devcontainer/compose.yaml exec app bin/setup
+        working-directory: mastodon
+      - run: docker compose -f .devcontainer/compose.yaml exec -d app bin/dev
+        working-directory: mastodon
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

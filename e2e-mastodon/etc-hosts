@@ -1,0 +1,144 @@
+
+# Soap Opera
+127.0.0.1  mastodon.test
+127.0.0.1  soap.test
+127.0.0.1  solid.test
+127.0.0.1  anna.solid.test
+127.0.0.1  bara.solid.test
+127.0.0.1  cilka.solid.test
+127.0.0.1  dana.solid.test
+127.0.0.1  eva.solid.test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+######################
+# block youtube
+# prosím, nech to zablokované. Jsi závislý a znova tam strávíš moc času.
+# what pain am i numbing?
+# stop
+## breathe
+# exercise instead, or do something nice
+127.0.0.1	youtube.com
+127.0.0.1	www.youtube.com
+127.0.0.1	uloz.to
+127.0.0.1	www.uloz.to
+127.0.0.1	www.ulozto.net
+127.0.0.1	ulozto.net
+127.0.0.1	tiktok.com
+127.0.0.1	www.tiktok.com
+127.0.0.1	fastshare.cloud
+127.0.0.1	www.fastshare.cloud
+##############################
+#        REALLY???           #
+##############################
+127.0.0.1	youtube.com
+127.0.0.1	www.youtube.com
+127.0.0.1	uloz.to
+127.0.0.1	www.uloz.to
+127.0.0.1	www.ulozto.net
+127.0.0.1	ulozto.net
+127.0.0.1	tiktok.com
+127.0.0.1	www.tiktok.com
+##############################
+#      ARE YOU SURE???       #
+##############################
+127.0.0.1	youtube.com
+127.0.0.1	www.youtube.com
+127.0.0.1	uloz.to
+127.0.0.1	www.uloz.to
+127.0.0.1	www.ulozto.net
+127.0.0.1	ulozto.net
+127.0.0.1	tiktok.com
+127.0.0.1	www.tiktok.com
+##############################
+#      IT'S BAD FOR YOU      #
+#                            #
+#           stop             #
+#         breathe            #
+#     be nice to myself      #
+#           <3               #
+##############################
+127.0.0.1	youtube.com
+127.0.0.1	www.youtube.com
+127.0.0.1	uloz.to
+127.0.0.1	www.uloz.to
+127.0.0.1	www.ulozto.net
+127.0.0.1	ulozto.net
+127.0.0.1	tiktok.com
+127.0.0.1	www.tiktok.com
+127.0.0.1       www.x.com
+127.0.0.1       x.com
+127.0.0.1	ceskatelevize.cz
+127.0.0.1	www.ceskatelevize.cz
+127.0.0.1	fastshare.cloud
+127.0.0.1	www.fastshare.cloud
+

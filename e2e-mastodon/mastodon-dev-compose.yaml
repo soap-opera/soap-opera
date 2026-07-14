@@ -1,0 +1,100 @@
+services:
+  app:
+    working_dir: /workspaces/mastodon/
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    network_mode: host
+    volumes:
+      - ..:/workspaces/mastodon:cached
+      - ~/.local/share/mkcert/rootCA.pem:/usr/local/share/ca-certificates/mkcert/rootCA.crt:ro
+    environment:
+      RAILS_ENV: development
+      NODE_ENV: development
+      VITE_RUBY_HOST: 0.0.0.0
+      BIND: 0.0.0.0
+      BOOTSNAP_CACHE_DIR: /tmp
+      REDIS_HOST: localhost
+      REDIS_PORT: '6379'
+      DB_HOST: localhost
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_PORT: '5432'
+      ES_ENABLED: 'true'
+      ES_HOST: localhost
+      ES_PORT: '9200'
+      LIBRE_TRANSLATE_ENDPOINT: http://localhost:5000
+      LOCAL_DOMAIN: ${LOCAL_DOMAIN:-localhost:3000}
+      VITE_DEV_SERVER_PUBLIC: ${VITE_DEV_SERVER_PUBLIC:-localhost:3036}
+    # Overrides default command so things don't shut down after the process ends.
+    command: bash -c "update-ca-certificates && sleep infinity"
+
+  db:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    command: ['postgres', '-c', 'listen_addresses=*']
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    networks:
+      - internal_network
+      - external_network
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+    networks:
+      - internal_network
+      - external_network
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.15
+    restart: unless-stopped
+    ports:
+      - 9200:9200
+    environment:
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      cluster.name: es-mastodon
+      discovery.type: single-node
+      bootstrap.memory_lock: 'true'
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    networks:
+      - internal_network
+      - external_network
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  libretranslate:
+    image: libretranslate/libretranslate:v1.7.3
+    restart: unless-stopped
+    ports:
+      - 5000:5000
+    volumes:
+      - lt-data:/home/libretranslate/.local
+    networks:
+      - external_network
+      - internal_network
+
+volumes:
+  postgres-data:
+  redis-data:
+  es-data:
+  lt-data:
+
+networks:
+  external_network:
+  internal_network:
+    internal: true
