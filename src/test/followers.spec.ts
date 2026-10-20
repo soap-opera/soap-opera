@@ -106,6 +106,21 @@ describe('Followers', () => {
       expect(response.status).toBe(202)
     })
 
+    it('should receive Follow activity to inbox with decoded semicolon in path, e.g. https://soap.test/users/https:%2F%2F(...)/inbox (Mastodon compatibility)', async () => {
+      // send a request from a fake actor
+      const response = await sendSignedFollowRequest(
+        fakeActors[0],
+        ownerActor,
+        {
+          uri: new URL(
+            `/users/${encodeURIComponent(ownerActor).replace('%3A', ':')}/inbox`,
+            appConfig.baseUrl,
+          ),
+        },
+      )
+      expect(response.status).toBe(202)
+    })
+
     it('should reject activity that is not properly signed', async () => {
       const response = await fetch(
         new URL(

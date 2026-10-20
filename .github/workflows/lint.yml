@@ -16,7 +16,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: lts/*
+      - run: npm i -g npm@latest
 
       - name: Install NPM packages
         run: npm ci

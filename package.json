@@ -53,5 +53,8 @@
     "strict-uri-encode": "^2.0.0",
     "typescript": "^6.0.3",
     "zod": "^4.4.3"
+  },
+  "patchedDependencies": {
+    "@fedify/fedify@2.4.4": "patches/@fedify/fedify@2.4.4.patch"
   }
 }

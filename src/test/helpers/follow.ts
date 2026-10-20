@@ -14,11 +14,13 @@ export const createSignedFollowRequest = async (
   object: string,
   overwrite?: {
     activity?: { actor?: string; object?: string; type?: string }
+    uri?: string | URL
   },
 ) => {
   // send the activity to a solid pod
   const request = new Request(
-    new URL(`/users/${encodeURIComponent(object)}/inbox`, appConfig.baseUrl),
+    overwrite?.uri ??
+      new URL(`/users/${encodeURIComponent(object)}/inbox`, appConfig.baseUrl),
     {
       method: 'POST',
       headers: { 'content-type': 'application/activity+json' },

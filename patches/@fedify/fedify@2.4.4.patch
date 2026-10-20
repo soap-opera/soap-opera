@@ -1,0 +1,36 @@
+--- a/dist/federation-Bf4FEork.cjs	
++++ b/dist/federation-Bf4FEork.cjs	
+@@ -9919,8 +9919,9 @@
+ 		onNotFound ??= notFound;
+ 		onNotAcceptable ??= notAcceptable;
+ 		onUnauthorized ??= unauthorized;
+ 		const url = new URL(request.url);
++		url.pathname = url.pathname.replace(/:/g, "%3A")
+ 		const route = this.router.route(url.pathname);
+ 		if (route == null) {
+ 			const media = this.hashlinkMediaDispatcher == null ? null : parseHashlinkGatewayRequest(url);
+ 			if (media != null) return await this.#fetchHashlinkMedia(request, media, {
+--- a/dist/middleware-BOBF7req.js	
++++ b/dist/middleware-BOBF7req.js	
+@@ -9822,8 +9822,9 @@
+ 		onNotFound ??= notFound;
+ 		onNotAcceptable ??= notAcceptable;
+ 		onUnauthorized ??= unauthorized;
+ 		const url = new URL(request.url);
++		url.pathname = url.pathname.replace(/:/g, "%3A")
+ 		const route = this.router.route(url.pathname);
+ 		if (route == null) {
+ 			const media = this.hashlinkMediaDispatcher == null ? null : parseHashlinkGatewayRequest(url);
+ 			if (media != null) return await this.#fetchHashlinkMedia(request, media, {
+--- a/dist/middleware-C_gtR3fV.mjs	
++++ b/dist/middleware-C_gtR3fV.mjs	
+@@ -6221,8 +6221,9 @@
+ 		onNotFound ??= notFound;
+ 		onNotAcceptable ??= notAcceptable;
+ 		onUnauthorized ??= unauthorized;
+ 		const url = new URL(request.url);
++		url.pathname = url.pathname.replace(/:/g, "%3A")
+ 		const route = this.router.route(url.pathname);
+ 		if (route == null) {
+ 			const media = this.hashlinkMediaDispatcher == null ? null : parseHashlinkGatewayRequest(url);
+ 			if (media != null) return await this.#fetchHashlinkMedia(request, media, {
