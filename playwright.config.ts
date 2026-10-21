@@ -84,7 +84,7 @@ export default defineConfig({
     // Soap-Opera
     {
       command:
-        'NODE_TLS_REJECT_UNAUTHORIZED=0 PORT=55000 BASE_URL=https://soap.test PROXY=true npm start',
+        'NODE_ENV=test NODE_TLS_REJECT_UNAUTHORIZED=0 PORT=55000 BASE_URL=https://soap.test PROXY=true npm start',
       url: 'https://soap.test',
       reuseExistingServer: true,
       ignoreHTTPSErrors: true,

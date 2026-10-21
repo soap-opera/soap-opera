@@ -41,7 +41,7 @@ async function createMastodonAccount(page: Page, account: MastodonAccount) {
   await page
     .getByRole('checkbox', { name: 'I have read and agree to the' })
     .check()
-  await page.waitForTimeout(500)
+  await page.waitForTimeout(1000)
   await page.getByRole('button', { name: 'Sign up' }).click()
 
   await page.waitForURL('http://localhost:3000/auth/setup')
